@@ -1,19 +1,26 @@
 #include "blocksimulation.h"
+#include "camerainteractor.h"
 
 BlockSimulation::BlockSimulation() :
     ISimulation(),
-    mCamera(), mGrid(this)
+    mCamera(), mGrid()
 {
-
+    mInteractor = new CameraInteractor(&mCamera);
 }
 
 BlockSimulation::~BlockSimulation()
 {
+    delete mInteractor;
+}
 
+IInteractor* BlockSimulation::interactor()
+{
+    return mInteractor;
 }
 
 void BlockSimulation::draw()
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     mGrid.draw(&mCamera);
 }
 

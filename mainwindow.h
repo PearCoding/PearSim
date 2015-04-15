@@ -17,8 +17,11 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void openSimulation(ISimulation* sim);
+
 public slots:
     void onMessageLogged(QOpenGLDebugMessage msg);
+    void makeScreenshot();
 
 private:
     Ui::MainWindow *ui;

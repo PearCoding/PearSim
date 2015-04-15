@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>648</width>
-    <height>349</height>
+    <width>813</width>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,7 +28,14 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="SimulationView" name="simulationView" native="true"/>
+     <widget class="SimulationView" name="simulationView" native="true">
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -37,7 +44,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>648</width>
+     <width>813</width>
      <height>21</height>
     </rect>
    </property>
@@ -61,6 +68,7 @@
     <property name="title">
      <string>View</string>
     </property>
+    <addaction name="actionScreenshot"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -130,6 +138,14 @@
     <string>Quit</string>
    </property>
   </action>
+  <action name="actionScreenshot">
+   <property name="text">
+    <string>Screenshot</string>
+   </property>
+   <property name="shortcut">
+    <string>F11</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -141,5 +157,25 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionScreenshot</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>makeScreenshot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>406</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>makeScreenshot()</slot>
+ </slots>
 </ui>

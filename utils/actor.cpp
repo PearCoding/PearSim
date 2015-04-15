@@ -1,7 +1,6 @@
 #include "actor.h"
 
-Actor::Actor(QOpenGLFunctions *funcs) :
-    mGL(funcs)
+Actor::Actor()
 {
 
 }

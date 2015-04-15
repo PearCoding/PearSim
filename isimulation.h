@@ -9,6 +9,7 @@ enum SimulationFlags
     SF_Step = 0x1
 };
 
+class IInteractor;
 class ISimulation : public QObject, protected QOpenGLFunctions
 {
     Q_OBJECT
@@ -18,6 +19,8 @@ public:
 
     virtual QString name() const = 0;
     virtual int flags() const = 0;
+
+    virtual IInteractor* interactor();
 
     virtual void draw();
     virtual void resizeResources(int w, int h);

@@ -11,6 +11,11 @@ ISimulation::~ISimulation()
 
 }
 
+IInteractor* ISimulation::interactor()
+{
+    return nullptr;
+}
+
 void ISimulation::draw()
 {
 

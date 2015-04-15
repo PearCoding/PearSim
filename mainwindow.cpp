@@ -3,6 +3,9 @@
 
 #include "sims/blocksimulation.h"
 
+#include <QFileDialog>
+#include <QStandardPaths>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -11,14 +14,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     mGLLogger = new QOpenGLDebugLogger(this);
 
-    connect(mGLLogger, SIGNAL(messageLogged( QOpenGLDebugMessage ) ),
-                 this, SLOT( onMessageLogged( QOpenGLDebugMessage ) ),
-                 Qt::DirectConnection );
+    connect(mGLLogger, SIGNAL(messageLogged(QOpenGLDebugMessage)),
+                 this, SLOT(onMessageLogged(QOpenGLDebugMessage)),
+                 Qt::DirectConnection);
 
     ui->simulationView->setLogger(mGLLogger);
 
-    mSimulation = new BlockSimulation;
-    ui->simulationView->setSimulation(mSimulation);
+    openSimulation( new BlockSimulation );
 }
 
 MainWindow::~MainWindow()
@@ -31,8 +33,52 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::openSimulation(ISimulation* sim)
+{
+    if (sim)
+    {
+        this->setWindowTitle("PearSimulation | " + sim->name());
+    }
+    else
+    {
+        this->setWindowTitle("PearSimulation");
+    }
+
+    mSimulation = sim;
+    ui->simulationView->setSimulation(mSimulation);
+}
+
+void MainWindow::makeScreenshot()
+{
+    QImage image = ui->simulationView->grabFramebuffer();
+
+    QString path = QFileDialog::getSaveFileName(this, tr("Save screenshot to.."),
+                                                QStandardPaths::writableLocation(QStandardPaths::PicturesLocation),
+                                                tr("Images (*.png *.xpm *.jpg)"));
+
+    if (!path.isEmpty())
+    {
+        image.save(path);
+    }
+}
+
 void MainWindow::onMessageLogged(QOpenGLDebugMessage msg)
 {
-    qDebug() << msg;
-    ui->logWidget->addItem(msg.message());
+    qDebug() << msg.severity() << " " << msg.message();
+
+    QListWidgetItem* item = new QListWidgetItem(msg.message());
+    switch(msg.severity())
+    {
+    case QOpenGLDebugMessage::HighSeverity:
+        item->setBackgroundColor(Qt::red);
+        break;
+    case QOpenGLDebugMessage::MediumSeverity:
+        item->setBackgroundColor(QColor(127, 127, 0));
+        break;
+    case QOpenGLDebugMessage::LowSeverity:
+        item->setBackgroundColor(Qt::yellow);
+        break;
+    }
+
+    ui->logWidget->addItem(item);
 }

@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     sims/blocksimulation.cpp \
     camera.cpp \
     utils/gridbox.cpp \
-    utils/actor.cpp
+    utils/actor.cpp \
+    iinteractor.cpp \
+    camerainteractor.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
@@ -27,6 +29,8 @@ HEADERS  += mainwindow.h \
     sims/blocksimulation.h \
     camera.h \
     utils/gridbox.h \
-    utils/actor.h
+    utils/actor.h \
+    iinteractor.h \
+    camerainteractor.h
 
 FORMS    += mainwindow.ui
