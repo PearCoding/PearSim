@@ -10,6 +10,10 @@ This repository contains the whole source code and the resources for the complet
 
 ## How do I get set up?
 You need the QT SDK and qmake to compile the code. Just use the PearSimulation.pro as the project file and everything should be fine.
+```Shell
+qmake PearSimulation.pro
+make
+```
 
 ## Contribution guidelines
 Just fork and let me see your features. I'm happy for every kind of support, but read the LICENSE file for more copyright information.
