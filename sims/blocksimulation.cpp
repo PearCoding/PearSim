@@ -37,7 +37,8 @@ void BlockSimulation::initResources()
 {
     ISimulation::initResources();
 
-    mCamera.translate(0,0,-1);
+    mCamera.setFocalPoint(QVector3D(0,0,0));
+    mCamera.setPosition(QVector3D(0,0,-1));
 
     glClearColor(0,0,0.2f, 1);
     glEnable(GL_DEPTH_TEST);
