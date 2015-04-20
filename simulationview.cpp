@@ -2,8 +2,8 @@
 
 #include <QOpenGLContext>
 
-#include "isimulation.h"
-#include "iinteractor.h"
+#include "sims/isimulation.h"
+#include "interactors/iinteractor.h"
 
 SimulationView::SimulationView(QWidget* parent) :
     QOpenGLWidget(parent),

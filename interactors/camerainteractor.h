@@ -3,7 +3,7 @@
 
 #include "iinteractor.h"
 
-#include <QPointF>
+#include <QPoint>
 
 class Camera;
 class CameraInteractor : public IInteractor

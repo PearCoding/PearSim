@@ -3,7 +3,7 @@
 
 #include "isimulation.h"
 #include "camera.h"
-#include "utils/gridbox.h"
+#include "actors/gridbox.h"
 
 class CameraInteractor;
 class BlockSimulation : public ISimulation

@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "sims/blocksimulation.h"
+#include "sims/springsimulation.h"
 
 #include <QFileDialog>
 #include <QStandardPaths>
@@ -20,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->simulationView->setLogger(mGLLogger);
 
-    openSimulation( new BlockSimulation );
+    openSimulation( new SpringSimulation );
 }
 
 MainWindow::~MainWindow()

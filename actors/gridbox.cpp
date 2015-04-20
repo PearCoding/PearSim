@@ -3,8 +3,8 @@
 
 #include <QOpenGLFunctions>
 
-GridBox::GridBox() :
-    Actor(),
+GridBox::GridBox(IActor *parent) :
+    IActor(parent),
     mProgram(nullptr),
     mIndexVBO(QOpenGLBuffer::IndexBuffer),
     mVertexData(nullptr), mIndexData(nullptr),

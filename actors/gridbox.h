@@ -6,12 +6,12 @@
 #include <QOpenGLShaderProgram>
 #include <QColor>
 
-#include "actor.h"
+#include "iactor.h"
 
-class GridBox : public Actor
+class GridBox : public IActor
 {
 public:
-    GridBox();
+    GridBox(IActor* parent = nullptr);
     ~GridBox();
 
     void build(int xc, int yc, int zc, float spacing);

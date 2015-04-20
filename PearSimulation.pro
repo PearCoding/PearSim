@@ -15,22 +15,30 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     simulationview.cpp \
-    isimulation.cpp \
-    sims/blocksimulation.cpp \
     camera.cpp \
-    utils/gridbox.cpp \
-    utils/actor.cpp \
-    iinteractor.cpp \
-    camerainteractor.cpp
+    sims/isimulation.cpp \
+    sims/blocksimulation.cpp \
+    sims/springsimulation.cpp \
+    interactors/iinteractor.cpp \
+    interactors/camerainteractor.cpp \
+    interactors/actorinteractor.cpp \
+    actors/iactor.cpp \
+    actors/rectangular.cpp \
+    actors/gridbox.cpp \
+    actors/emptyactor.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
-    isimulation.h \
-    sims/blocksimulation.h \
     camera.h \
-    utils/gridbox.h \
-    utils/actor.h \
-    iinteractor.h \
-    camerainteractor.h
+    sims/isimulation.h \
+    sims/blocksimulation.h \
+    sims/springsimulation.h \
+    interactors/iinteractor.h \
+    interactors/camerainteractor.h \
+    interactors/actorinteractor.h \
+    actors/iactor.h \
+    actors/rectangular.h \
+    actors/gridbox.h \
+    actors/emptyactor.h
 
 FORMS    += mainwindow.ui

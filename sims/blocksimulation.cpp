@@ -1,5 +1,5 @@
 #include "blocksimulation.h"
-#include "camerainteractor.h"
+#include "interactors/camerainteractor.h"
 
 BlockSimulation::BlockSimulation() :
     ISimulation(),
