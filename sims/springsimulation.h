@@ -6,6 +6,7 @@
 
 #include "actors/rectangular.h"
 #include "actors/emptyactor.h"
+#include "actors/sphere.h"
 
 class ActorInteractor;
 class SpringSimulation : public ISimulation
@@ -37,6 +38,8 @@ private:
     EmptyActor mRootActor;
     Rectangular mStartBound;
     Rectangular mEndBound;
+    Sphere mFirstSphere;
+    Sphere mSecondSphere;
 
     ActorInteractor* mInteractor;
 };

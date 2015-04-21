@@ -10,9 +10,13 @@ SpringSimulation::SpringSimulation() :
 
     mStartBound.setParent(&mRootActor);
     mEndBound.setParent(&mRootActor);
+    mFirstSphere.setParent(&mRootActor);
+    mSecondSphere.setParent(&mRootActor);
 
     mStartBound.setPosition(QVector3D(0.5f, 0, 0));
     mEndBound.setPosition(QVector3D(-0.5f, 0, 0));
+    mFirstSphere.setPosition(QVector3D(0.2f, 0, 0));
+    mSecondSphere.setPosition(QVector3D(-0.2f, 0, 0));
 }
 
 SpringSimulation::~SpringSimulation()
@@ -30,6 +34,8 @@ void SpringSimulation::draw()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     mStartBound.draw(&mCamera);
     mEndBound.draw(&mCamera);
+    mFirstSphere.draw(&mCamera);
+    mSecondSphere.draw(&mCamera);
 }
 
 void SpringSimulation::resizeResources(int w, int h)
@@ -50,6 +56,8 @@ void SpringSimulation::initResources()
 
     mStartBound.build(0.1f, 0.25f, 0.25f);
     mEndBound.build(0.1f, 0.25f, 0.25f);
+    mFirstSphere.build(0.1f, 16, 16);
+    mSecondSphere.build(0.1f, 16, 16);
 
     glClearColor(0,0,0.2f, 1);
     glEnable(GL_DEPTH_TEST);
@@ -59,6 +67,8 @@ void SpringSimulation::cleanResources()
 {
     mStartBound.cleanup();
     mEndBound.cleanup();
+    mFirstSphere.cleanup();
+    mSecondSphere.cleanup();
 
     ISimulation::cleanResources();
 }

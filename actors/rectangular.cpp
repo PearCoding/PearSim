@@ -12,7 +12,7 @@ Rectangular::Rectangular(IActor *parent):
 
 Rectangular::~Rectangular()
 {
-
+    cleanup();
 }
 
 GLint Rectangular::sIndicesData[] =

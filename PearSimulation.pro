@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     actors/iactor.cpp \
     actors/rectangular.cpp \
     actors/gridbox.cpp \
-    actors/emptyactor.cpp
+    actors/emptyactor.cpp \
+    actors/sphere.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
@@ -39,6 +40,7 @@ HEADERS  += mainwindow.h \
     actors/iactor.h \
     actors/rectangular.h \
     actors/gridbox.h \
-    actors/emptyactor.h
+    actors/emptyactor.h \
+    actors/sphere.h
 
 FORMS    += mainwindow.ui
