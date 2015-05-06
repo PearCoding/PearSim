@@ -28,7 +28,9 @@ SOURCES += main.cpp\
     actors/emptyactor.cpp \
     actors/sphere.cpp \
     renderer/material.cpp \
-    renderer/renderer.cpp
+    renderer/renderer.cpp \
+    renderer/light.cpp \
+    renderer/shader.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
@@ -47,6 +49,8 @@ HEADERS  += mainwindow.h \
     datacontainer.h \
     datagrid.h \
     renderer/material.h \
-    renderer/renderer.h
+    renderer/renderer.h \
+    renderer/light.h \
+    renderer/shader.h
 
 FORMS    += mainwindow.ui
