@@ -5,6 +5,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    a.setApplicationName("PearSimulation");
+    a.setApplicationVersion("0.1");
+    a.setOrganizationName("PearCoding");
+
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setMajorVersion(4);

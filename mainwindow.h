@@ -23,7 +23,22 @@ public slots:
     void onMessageLogged(QOpenGLDebugMessage msg);
     void makeScreenshot();
 
+    void showAllDockWidgets();
+    void hideAllDockWidgets();
+
+    void showAllToolBars();
+    void hideAllToolBars();
+
+protected:
+    void closeEvent(QCloseEvent* event);
+
 private:
+    void showDockWidgets(bool b);
+    void showToolBars(bool b);
+
+    void saveSettings();
+    void loadSettings();
+
     Ui::MainWindow *ui;
     ISimulation* mSimulation;
 

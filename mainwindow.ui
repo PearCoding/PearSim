@@ -68,7 +68,26 @@
     <property name="title">
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuDockwidgets">
+     <property name="title">
+      <string>Dockwidgets</string>
+     </property>
+     <addaction name="actionHide_All"/>
+     <addaction name="actionShow_All"/>
+     <addaction name="separator"/>
+    </widget>
+    <widget class="QMenu" name="menuToolbars">
+     <property name="title">
+      <string>Toolbars</string>
+     </property>
+     <addaction name="actionHide_All_2"/>
+     <addaction name="actionShow_All_2"/>
+     <addaction name="separator"/>
+    </widget>
     <addaction name="actionScreenshot"/>
+    <addaction name="separator"/>
+    <addaction name="menuDockwidgets"/>
+    <addaction name="menuToolbars"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -146,6 +165,26 @@
     <string>F11</string>
    </property>
   </action>
+  <action name="actionHide_All">
+   <property name="text">
+    <string>Hide All</string>
+   </property>
+  </action>
+  <action name="actionShow_All">
+   <property name="text">
+    <string>Show All</string>
+   </property>
+  </action>
+  <action name="actionHide_All_2">
+   <property name="text">
+    <string>Hide All</string>
+   </property>
+  </action>
+  <action name="actionShow_All_2">
+   <property name="text">
+    <string>Show All</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -174,8 +213,76 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionHide_All</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>hideAllDockWidgets()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>406</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_All</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showAllDockWidgets()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>406</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionHide_All_2</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>hideAllToolBars()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>406</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_All_2</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showAllToolBars()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>406</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>makeScreenshot()</slot>
+  <slot>showAllDockWidgets()</slot>
+  <slot>hideAllDockWidgets()</slot>
+  <slot>showAllToolBars()</slot>
+  <slot>hideAllToolBars()</slot>
  </slots>
 </ui>

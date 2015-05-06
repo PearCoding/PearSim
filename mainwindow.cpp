@@ -6,12 +6,17 @@
 
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    ui->menuDockwidgets->addAction(ui->logDW->toggleViewAction());
+    ui->menuDockwidgets->addAction(ui->propertiesDW->toggleViewAction());
+    ui->menuToolbars->addAction(ui->mainToolBar->toggleViewAction());
 
     mGLLogger = new QOpenGLDebugLogger(this);
 
@@ -22,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->simulationView->setLogger(mGLLogger);
 
     openSimulation( new SpringSimulation );
+
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
@@ -32,6 +39,11 @@ MainWindow::~MainWindow()
     delete mSimulation;
 
     delete ui;
+}
+
+void MainWindow::closeEvent(QCloseEvent*)
+{
+    saveSettings();
 }
 
 void MainWindow::openSimulation(ISimulation* sim)
@@ -82,4 +94,53 @@ void MainWindow::onMessageLogged(QOpenGLDebugMessage msg)
     }
 
     ui->logWidget->addItem(item);
+}
+
+void MainWindow::showAllDockWidgets()
+{
+    showDockWidgets(true);
+}
+
+void MainWindow::hideAllDockWidgets()
+{
+    showDockWidgets(false);
+}
+
+void MainWindow::showAllToolBars()
+{
+    showToolBars(true);
+}
+
+void MainWindow::hideAllToolBars()
+{
+    showToolBars(false);
+}
+
+void MainWindow::showDockWidgets(bool b)
+{
+    ui->logDW->setVisible(b);
+    ui->propertiesDW->setVisible(b);
+}
+
+void MainWindow::showToolBars(bool b)
+{
+    ui->mainToolBar->setVisible(b);
+}
+
+void MainWindow::saveSettings()
+{
+    QSettings settings;
+    settings.beginGroup("Main");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("state", saveState());
+    settings.endGroup();
+}
+
+void MainWindow::loadSettings()
+{
+    QSettings settings;
+    settings.beginGroup("Main");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("state").toByteArray());
+    settings.endGroup();
 }
