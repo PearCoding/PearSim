@@ -10,6 +10,7 @@ enum SimulationFlags
 };
 
 class IInteractor;
+class Renderer;
 class ISimulation : public QObject, protected QOpenGLFunctions
 {
     Q_OBJECT
@@ -22,7 +23,7 @@ public:
 
     virtual IInteractor* interactor();
 
-    virtual void draw();
+    virtual void draw(Renderer* renderer);
     virtual void resizeResources(int w, int h);
     virtual void initResources();
     virtual void cleanResources();

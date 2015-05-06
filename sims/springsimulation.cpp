@@ -29,7 +29,7 @@ IInteractor* SpringSimulation::interactor()
     return mInteractor;
 }
 
-void SpringSimulation::draw()
+void SpringSimulation::draw(Renderer* renderer)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     mStartBound.draw(&mCamera);

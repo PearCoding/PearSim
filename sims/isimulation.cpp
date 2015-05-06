@@ -16,12 +16,12 @@ IInteractor* ISimulation::interactor()
     return nullptr;
 }
 
-void ISimulation::draw()
+void ISimulation::draw(Renderer*)
 {
 
 }
 
-void ISimulation::resizeResources(int w, int h)
+void ISimulation::resizeResources(int, int)
 {
 
 }

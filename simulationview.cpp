@@ -33,6 +33,8 @@ void SimulationView::cleanup()
         mSimulation->cleanResources();
         mSimulation = nullptr;
     }
+
+    mRenderer.cleanup();
 }
 
 void SimulationView::initializeGL()
@@ -45,6 +47,8 @@ void SimulationView::initializeGL()
         mLogger->enableMessages();
     }
 
+    mRenderer.init();
+
     if(mSimulation)
     {
         mSimulation->initResources();
@@ -53,14 +57,18 @@ void SimulationView::initializeGL()
 
 void SimulationView::paintGL()
 {
+    mRenderer.beginFrame();
     if(mSimulation)
     {
-        mSimulation->draw();
+        mSimulation->draw(&mRenderer);
     }
+    mRenderer.endFrame();
 }
 
 void SimulationView::resizeGL(int width, int height)
 {
+    mRenderer.resizeResources(width, height);
+
     if(mSimulation)
     {
         mSimulation->resizeResources(width, height);

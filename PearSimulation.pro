@@ -26,7 +26,9 @@ SOURCES += main.cpp\
     actors/rectangular.cpp \
     actors/gridbox.cpp \
     actors/emptyactor.cpp \
-    actors/sphere.cpp
+    actors/sphere.cpp \
+    renderer/material.cpp \
+    renderer/renderer.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
@@ -41,6 +43,10 @@ HEADERS  += mainwindow.h \
     actors/rectangular.h \
     actors/gridbox.h \
     actors/emptyactor.h \
-    actors/sphere.h
+    actors/sphere.h \
+    datacontainer.h \
+    datagrid.h \
+    renderer/material.h \
+    renderer/renderer.h
 
 FORMS    += mainwindow.ui

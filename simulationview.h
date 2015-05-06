@@ -4,6 +4,8 @@
 #include <QOpenGLWidget>
 #include <QOpenGLDebugLogger>
 
+#include "renderer/renderer.h"
+
 class ISimulation;
 class SimulationView : public QOpenGLWidget
 {
@@ -33,6 +35,7 @@ protected:
     void resizeEvent(QResizeEvent * event) Q_DECL_OVERRIDE;
 
 private:
+    Renderer mRenderer;
     ISimulation* mSimulation;
     QOpenGLDebugLogger* mLogger;
 };

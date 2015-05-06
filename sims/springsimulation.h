@@ -27,7 +27,7 @@ public:
 
     IInteractor* interactor();
 
-    virtual void draw();
+    virtual void draw(Renderer *renderer);
     virtual void resizeResources(int w, int h);
     virtual void initResources();
     virtual void cleanResources();

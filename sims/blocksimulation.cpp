@@ -18,7 +18,7 @@ IInteractor* BlockSimulation::interactor()
     return mInteractor;
 }
 
-void BlockSimulation::draw()
+void BlockSimulation::draw(Renderer*)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     mGrid.draw(&mCamera);
