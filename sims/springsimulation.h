@@ -8,6 +8,8 @@
 #include "actors/emptyactor.h"
 #include "actors/sphere.h"
 
+#include "renderer/material.h"
+
 class ActorInteractor;
 class SpringSimulation : public ISimulation
 {
@@ -27,7 +29,7 @@ public:
 
     IInteractor* interactor();
 
-    virtual void draw(Renderer *renderer);
+    virtual void draw(Renderer *);
     virtual void resizeResources(int w, int h);
     virtual void initResources();
     virtual void cleanResources();
@@ -40,6 +42,8 @@ private:
     Rectangular mEndBound;
     Sphere mFirstSphere;
     Sphere mSecondSphere;
+
+    Material mSphereMaterial;
 
     ActorInteractor* mInteractor;
 };

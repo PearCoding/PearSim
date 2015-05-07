@@ -4,6 +4,7 @@
 #include <QMatrix4x4>
 
 class Camera;
+class Environment;
 class IActor
 {
 public:
@@ -13,7 +14,7 @@ public:
     void setParent(IActor* actor);
     IActor* parent() const;
 
-    virtual void draw(Camera *camera) = 0;
+    virtual void draw(Camera *camera, Environment* env) = 0;
 
     void setPosition(const QVector3D& v);
     QVector3D position() const;

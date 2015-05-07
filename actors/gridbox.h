@@ -17,7 +17,7 @@ public:
     void build(int xc, int yc, int zc, float spacing);
     void cleanup();
 
-    void draw(Camera *camera);
+    void draw(Camera *camera, Environment* env);
 
     void setColor(const QColor& color)
     {

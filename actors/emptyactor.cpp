@@ -11,6 +11,6 @@ EmptyActor::~EmptyActor()
 
 }
 
-void EmptyActor::draw(Camera*)
+void EmptyActor::draw(Camera*, Environment*)
 {
 }

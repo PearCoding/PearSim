@@ -5,6 +5,8 @@ SpringSimulation::SpringSimulation() :
     ISimulation(),
     mCamera()
 {
+    mSphereMaterial.setDiffuse(Qt::blue);
+
     mInteractor = new ActorInteractor();
     mInteractor->setActor(&mRootActor);
 
@@ -17,6 +19,9 @@ SpringSimulation::SpringSimulation() :
     mEndBound.setPosition(QVector3D(-0.5f, 0, 0));
     mFirstSphere.setPosition(QVector3D(0.2f, 0, 0));
     mSecondSphere.setPosition(QVector3D(-0.2f, 0, 0));
+
+    mFirstSphere.setMaterial(&mSphereMaterial);
+    mSecondSphere.setMaterial(&mSphereMaterial);
 }
 
 SpringSimulation::~SpringSimulation()
@@ -29,13 +34,13 @@ IInteractor* SpringSimulation::interactor()
     return mInteractor;
 }
 
-void SpringSimulation::draw(Renderer* renderer)
+void SpringSimulation::draw(Renderer*)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    mStartBound.draw(&mCamera);
-    mEndBound.draw(&mCamera);
-    mFirstSphere.draw(&mCamera);
-    mSecondSphere.draw(&mCamera);
+    mStartBound.draw(&mCamera, nullptr);
+    mEndBound.draw(&mCamera, nullptr);
+    mFirstSphere.draw(&mCamera, nullptr);
+    mSecondSphere.draw(&mCamera, nullptr);
 }
 
 void SpringSimulation::resizeResources(int w, int h)

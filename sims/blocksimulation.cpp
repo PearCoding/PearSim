@@ -21,7 +21,7 @@ IInteractor* BlockSimulation::interactor()
 void BlockSimulation::draw(Renderer*)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    mGrid.draw(&mCamera);
+    mGrid.draw(&mCamera, nullptr);
 }
 
 void BlockSimulation::resizeResources(int w, int h)

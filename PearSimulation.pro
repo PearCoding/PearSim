@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     renderer/material.cpp \
     renderer/renderer.cpp \
     renderer/light.cpp \
-    renderer/shader.cpp
+    renderer/shader.cpp \
+    renderer/environment.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
@@ -51,6 +52,7 @@ HEADERS  += mainwindow.h \
     renderer/material.h \
     renderer/renderer.h \
     renderer/light.h \
-    renderer/shader.h
+    renderer/shader.h \
+    renderer/environment.h
 
 FORMS    += mainwindow.ui

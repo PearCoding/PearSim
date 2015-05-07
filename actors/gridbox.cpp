@@ -142,7 +142,7 @@ void GridBox::cleanup()
     }
 }
 
-void GridBox::draw(Camera* camera)
+void GridBox::draw(Camera* camera, Environment *env)
 {
     Q_ASSERT(camera);
 

@@ -9,7 +9,7 @@ public:
     EmptyActor(IActor* parent = nullptr);
     ~EmptyActor();
 
-    void draw(Camera *camera);
+    void draw(Camera *camera, Environment* env);
 };
 
 #endif // EMPTYACTOR_H

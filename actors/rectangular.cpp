@@ -98,7 +98,7 @@ void Rectangular::cleanup()
     }
 }
 
-void Rectangular::draw(Camera* camera)
+void Rectangular::draw(Camera* camera, Environment *env)
 {
     Q_ASSERT(camera);
 

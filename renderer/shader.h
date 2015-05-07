@@ -6,37 +6,43 @@
 
 #define PS_MAX_LIGHTS (4)
 
+struct ShaderPreferences
+{
+    ShaderPreferences() :
+        HasDiffuseTexture(false), HasSpecularTexture(false), HasSmoothTexture(false),
+        HasAmbient(false), Lights(0)
+    {
+    }
+
+    bool HasDiffuseTexture;
+    bool HasSpecularTexture;
+    bool HasSmoothTexture;
+    bool HasAmbient;
+    int Lights;
+};
+
 class Camera;
 class Material;
-class Light;
+class Environment;
 class Shader
 {
 public:
     Shader();
     ~Shader();
 
-    struct ShaderPreferences
-    {
-        bool HasDiffuseTexture;
-        bool HasSpecularTexture;
-        bool HasSmoothTexture;
-        bool HasAmbient;
-        int Lights;
-    };
-
     inline bool isBuilt() const
     {
-        return mIsBuilt;
+        return mProgram != nullptr;
     }
 
     void build(ShaderPreferences prefs);
 
-    void bind(const QMatrix4x4& mv, Camera *camera, Material* m, Light* lights);
+    void bind(const QMatrix4x4& mv, Camera *camera, Material* m, Environment* env);
+    void release();
 
 private:
     void cleanup();
 
-    bool mIsBuilt;
     ShaderPreferences mPreferences;
     QOpenGLShaderProgram *mProgram;
 

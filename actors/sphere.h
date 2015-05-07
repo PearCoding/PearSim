@@ -8,6 +8,8 @@
 
 #include "iactor.h"
 
+class Shader;
+class Material;
 class Sphere : public IActor
 {
 public:
@@ -17,7 +19,7 @@ public:
     void build(float r, unsigned int s, unsigned int segments);
     void cleanup();
 
-    void draw(Camera *camera);
+    void draw(Camera *camera, Environment* renderer);
 
     void setColor(const QColor& color)
     {
@@ -29,15 +31,23 @@ public:
         return mColor;
     }
 
+    Material* material() const
+    {
+        return mMaterial;
+    }
+
+    void setMaterial(Material* material)
+    {
+        mMaterial = material;
+    }
+
 private:
     QOpenGLVertexArrayObject mVAO;
     QOpenGLBuffer mVBO;
     QOpenGLBuffer mIndexVBO;
-    QOpenGLShaderProgram *mProgram;
 
-    int mProjMatrixLoc;
-    int mMVMatrixLoc;
-    int mColorLoc;
+    Shader* mShader;
+    Material* mMaterial;
 
     int mVertexCount;
     int mIndicesCount;

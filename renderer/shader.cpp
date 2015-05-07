@@ -3,9 +3,10 @@
 #include "camera.h"
 #include "material.h"
 #include "light.h"
+#include "environment.h"
 
 Shader::Shader() :
-    mIsBuilt(false)
+    mProgram(nullptr)
 {
 
 }
@@ -30,8 +31,8 @@ void Shader::build(ShaderPreferences prefs)
 
     QString fragmentShader;
     fragmentShader += "#version 150\n"
-                      "in vec3 normal;\n"
-                      "in vec2 uv;\n"
+                      "in mediump vec3 normal;\n"
+                      "in lowp vec2 uv;\n"
                       "out highp vec4 fragColor;\n";
 
     if(prefs.HasDiffuseTexture)
@@ -169,10 +170,21 @@ void Shader::build(ShaderPreferences prefs)
         mLightPositionLoc = mProgram->uniformLocation("lightPositions");
         mLightColorLoc = mProgram->uniformLocation("lightColors");
     }
+
+    mProgram->enableAttributeArray("vertex");
+    mProgram->setAttributeBuffer("vertex", GL_FLOAT, 0, 3, 8*sizeof(float));
+
+    mProgram->enableAttributeArray("normal");
+    mProgram->setAttributeBuffer("normal", GL_FLOAT, 3*sizeof(float), 3, 8*sizeof(float));
+
+    mProgram->enableAttributeArray("uv");
+    mProgram->setAttributeBuffer("uv", GL_FLOAT, 6*sizeof(float), 2, 8*sizeof(float));
 }
 
-void Shader::bind(const QMatrix4x4& mv, Camera* camera, Material* m, Light* lights)
+void Shader::bind(const QMatrix4x4& mv, Camera* camera, Material* m, Environment *env)
 {
+    mProgram->bind();
+
     mProgram->setUniformValue(mProjMatrixLoc, camera->projection());
     mProgram->setUniformValue(mMVMatrixLoc, mv);
 
@@ -180,16 +192,41 @@ void Shader::bind(const QMatrix4x4& mv, Camera* camera, Material* m, Light* ligh
     mProgram->setUniformValue(mSpecularLoc, m->specular());
     mProgram->setUniformValue(mSmoothnessLoc, m->smoothness());
 
-    if(mPreferences.HasAmbient)
+    if(env && mPreferences.HasAmbient)
     {
-
+        mProgram->setUniformValue(mAmbientFactorLoc, env->ambientFactor());
+        mProgram->setUniformValue(mAmbientColorLoc, env->ambientColor());
     }
+
+    if(env && mPreferences.Lights > 0)
+    {
+        Q_ASSERT(mPreferences.Lights <= PS_MAX_LIGHTS);
+
+        QVector4D colors[PS_MAX_LIGHTS];
+        QVector3D positions[PS_MAX_LIGHTS];
+
+        for(int i = 0; i < mPreferences.Lights && i < PS_MAX_LIGHTS; ++i)
+        {
+            QColor col = env->light(i)->color();
+
+            colors[i] = QVector4D(col.redF(), col.greenF(), col.blueF(), col.alphaF());
+            positions[i] = env->light(i)->position();
+        }
+
+        mProgram->setUniformValueArray(mLightColorLoc, colors, mPreferences.Lights);
+        mProgram->setUniformValueArray(mLightPositionLoc, positions, mPreferences.Lights);
+    }
+}
+
+void Shader::release()
+{
+    mProgram->release();
 }
 
 void Shader::cleanup()
 {
-    if(!mIsBuilt)
+    if(mProgram)
     {
-        return;
+        delete mProgram;
     }
 }

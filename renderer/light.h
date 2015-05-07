@@ -2,6 +2,7 @@
 #define LIGHT_H
 
 #include <QVector3D>
+#include <QColor>
 
 class Light
 {
