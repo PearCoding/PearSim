@@ -8,9 +8,11 @@ SpringSimulation::SpringSimulation() :
     mCamera()
 {
     mSphereMaterial.setDiffuse(Qt::blue);
+    mSphereMaterial.setSpecular(QColor(1, 0,0));
+    mSphereMaterial.setSmoothness(10);
 
     //mEnvironment.setAmbientFactor(1.0f);
-    Light* light = new Light(/*&mRootActor*/);
+    Light* light = new Light(&mRootActor);
     light->setPosition(QVector3D(2,2,2));
     mEnvironment.addLight(light);
 

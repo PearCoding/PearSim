@@ -28,7 +28,6 @@ void IActor::setPosition(const QVector3D& v)
     cache();
 }
 
-//TODO
 QVector3D IActor::position() const
 {
     if(!mParent)
@@ -37,22 +36,37 @@ QVector3D IActor::position() const
     }
     else
     {
-        return mParent->position() + mPosition;
+        QVector3D rot = mParent->rotation();
+
+        QMatrix4x4 transform;
+        transform.rotate(rot.x(), 1, 0, 0);
+        transform.rotate(rot.y(), 0, 1, 0);
+        transform.rotate(rot.z(), 0, 0, 1);
+        transform.scale(mParent->scale());
+
+        return mParent->position() + transform * mPosition;
     }
 }
 
 void IActor::setRotation(const QVector3D &v)
 {
     mRotation = v;
-    mRotation.setX(fmod(mRotation.x(), 180));
-    mRotation.setY(fmod(mRotation.y(), 180));
-    mRotation.setZ(fmod(mRotation.z(), 180));
+    mRotation.setX(fmod(mRotation.x(), 360));
+    mRotation.setY(fmod(mRotation.y(), 360));
+    mRotation.setZ(fmod(mRotation.z(), 360));
     cache();
 }
 
 QVector3D IActor::rotation() const
 {
-    return mRotation;
+    if(!mParent)
+    {
+        return mRotation;
+    }
+    else
+    {
+        return mParent->rotation() + mRotation;
+    }
 }
 
 void IActor::rotate(const QVector3D& v)

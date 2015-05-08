@@ -27,7 +27,7 @@ static const char *vertexShaderSourceCore =
         "uniform mat4 projMatrix;\n"
         "uniform mat4 mvMatrix;\n"
         "void main() {\n"
-        "   N = normal;\n"
+        "   N = (mvMatrix*vec4(normal,0)).xyz;\n"
         "   Tex = uv;\n"
         "   eye = - mvMatrix * vertex;\n"
         "   gl_Position = projMatrix * mvMatrix * vertex;\n"
@@ -144,11 +144,12 @@ void Shader::build(ShaderPreferences prefs)
 
         for(int i = 0; i < prefs.Lights; ++i)
         {
-            fragmentShader += "   vec3 L" + QString::number(i)
-                                + " = normalize(lightPositions[" + QString::number(i) +"] + eyeN);\n"
-                              "   float N" + QString::number(i)
-                                + " = max(dot(norm, L" + QString::number(i) +"), 0.0);\n"
-                              "   output += color*lightColors[" + QString::number(i) +"]*N"+QString::number(i)+";\n";
+            fragmentShader += QString("   vec3 L%1 = normalize(lightPositions[%1] + eyeN);\n"
+                              "   float N%1 = max(dot(norm, L%1), 0.0);\n"
+                              "   vec3 R%1 = normalize(-reflect(L%1,norm));\n"
+                              "   output += color * lightColors[%1] * N%1;\n"
+                              "   output += spec * lightColors[%1] * pow(max(dot(R%1,eyeN),0.0),sm);\n")
+                    .arg(i);
         }
 
         fragmentShader += "   fragColor = clamp(output,0,1);\n";

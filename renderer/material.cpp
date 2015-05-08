@@ -1,6 +1,7 @@
 #include "material.h"
 
-Material::Material()
+Material::Material() :
+    mDiffuse(Qt::gray), mSpecular(Qt::white), mSmoothness(0.6f)
 {
 
 }
