@@ -4,14 +4,13 @@
 #include <QVector3D>
 #include <QColor>
 
-class Light
+#include "actors/emptyactor.h"
+
+class Light : public EmptyActor
 {
 public:
-    Light();
-    ~Light();
-
-    QVector3D position() const;
-    void setPosition(const QVector3D& pos);
+    Light(IActor* parent = nullptr);
+    virtual ~Light();
 
     QColor color() const;
     void setColor(const QColor& color);

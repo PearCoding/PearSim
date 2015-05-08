@@ -7,7 +7,7 @@ class EmptyActor : public IActor
 {
 public:
     EmptyActor(IActor* parent = nullptr);
-    ~EmptyActor();
+    virtual ~EmptyActor();
 
     void draw(Camera *camera, Environment* env);
 };

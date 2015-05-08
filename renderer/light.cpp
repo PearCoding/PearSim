@@ -1,7 +1,7 @@
 #include "light.h"
 
-Light::Light() :
-    mPosition(), mColor(Qt::white)
+Light::Light(IActor *parent) :
+    EmptyActor(parent), mColor(Qt::white)
 {
 
 }
@@ -9,16 +9,6 @@ Light::Light() :
 Light::~Light()
 {
 
-}
-
-QVector3D Light::position() const
-{
-    return mPosition;
-}
-
-void Light::setPosition(const QVector3D& pos)
-{
-    mPosition = pos;
 }
 
 QColor Light::color() const

@@ -1,11 +1,18 @@
 #include "springsimulation.h"
 #include "interactors/actorinteractor.h"
 
+#include "renderer/light.h"
+
 SpringSimulation::SpringSimulation() :
     ISimulation(),
     mCamera()
 {
     mSphereMaterial.setDiffuse(Qt::blue);
+
+    //mEnvironment.setAmbientFactor(1.0f);
+    Light* light = new Light(/*&mRootActor*/);
+    light->setPosition(QVector3D(2,2,2));
+    mEnvironment.addLight(light);
 
     mInteractor = new ActorInteractor();
     mInteractor->setActor(&mRootActor);
@@ -39,8 +46,8 @@ void SpringSimulation::draw(Renderer*)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     mStartBound.draw(&mCamera, nullptr);
     mEndBound.draw(&mCamera, nullptr);
-    mFirstSphere.draw(&mCamera, nullptr);
-    mSecondSphere.draw(&mCamera, nullptr);
+    mFirstSphere.draw(&mCamera, &mEnvironment);
+    mSecondSphere.draw(&mCamera, &mEnvironment);
 }
 
 void SpringSimulation::resizeResources(int w, int h)

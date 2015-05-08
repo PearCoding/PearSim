@@ -9,6 +9,7 @@
 #include "actors/sphere.h"
 
 #include "renderer/material.h"
+#include "renderer/environment.h"
 
 class ActorInteractor;
 class SpringSimulation : public ISimulation
@@ -44,6 +45,7 @@ private:
     Sphere mSecondSphere;
 
     Material mSphereMaterial;
+    Environment mEnvironment;
 
     ActorInteractor* mInteractor;
 };

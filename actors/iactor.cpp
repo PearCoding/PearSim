@@ -1,5 +1,7 @@
 #include "iactor.h"
 
+#include <QTransform>
+
 IActor::IActor(IActor *parent) :
     mParent(parent), mScale(1)
 {
@@ -26,9 +28,17 @@ void IActor::setPosition(const QVector3D& v)
     cache();
 }
 
+//TODO
 QVector3D IActor::position() const
 {
-    return mPosition;
+    if(!mParent)
+    {
+        return mPosition;
+    }
+    else
+    {
+        return mParent->position() + mPosition;
+    }
 }
 
 void IActor::setRotation(const QVector3D &v)
@@ -68,7 +78,14 @@ void IActor::setScale(float f)
 
 float IActor::scale() const
 {
-    return mScale;
+    if(!mParent)
+    {
+        return mScale;
+    }
+    else
+    {
+        return mParent->scale() * mScale;
+    }
 }
 
 QMatrix4x4 IActor::matrix() const

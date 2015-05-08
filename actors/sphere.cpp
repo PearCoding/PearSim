@@ -87,6 +87,8 @@ void Sphere::build(float r, unsigned int slices, unsigned int segments)
     mIndexVBO.allocate(mIndexData, mIndicesCount*sizeof(GLuint));
 
     ShaderPreferences prefs;
+    prefs.HasAmbient = true;
+    prefs.Lights = 1;
     mShader = new Shader;
     mShader->build(prefs);
 }

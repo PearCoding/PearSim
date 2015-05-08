@@ -19,9 +19,17 @@ Shader::~Shader()
 static const char *vertexShaderSourceCore =
         "#version 150\n"
         "in vec4 vertex;\n"
+        "in mediump vec3 normal;\n"
+        "in lowp vec2 uv;\n"
+        "out vec4 eye;\n"
+        "out mediump vec3 N;\n"
+        "out lowp vec2 Tex;\n"
         "uniform mat4 projMatrix;\n"
         "uniform mat4 mvMatrix;\n"
         "void main() {\n"
+        "   N = normal;\n"
+        "   Tex = uv;\n"
+        "   eye = - mvMatrix * vertex;\n"
         "   gl_Position = projMatrix * mvMatrix * vertex;\n"
         "}\n";
 
@@ -31,8 +39,9 @@ void Shader::build(ShaderPreferences prefs)
 
     QString fragmentShader;
     fragmentShader += "#version 150\n"
-                      "in mediump vec3 normal;\n"
-                      "in lowp vec2 uv;\n"
+                      "in mediump vec3 N;\n"
+                      "in lowp vec2 Tex;\n"
+                      "in vec4 eye;\n"
                       "out highp vec4 fragColor;\n";
 
     if(prefs.HasDiffuseTexture)
@@ -79,7 +88,7 @@ void Shader::build(ShaderPreferences prefs)
     {
         if(prefs.HasDiffuseTexture)
         {
-            fragmentShader += "   vec4 color = texture(diffuse, uv);\n";
+            fragmentShader += "   vec4 color = texture(diffuse, Tex);\n";
         }
         else
         {
@@ -99,7 +108,7 @@ void Shader::build(ShaderPreferences prefs)
     {
         if(prefs.HasDiffuseTexture)
         {
-            fragmentShader += "   vec4 color = texture(diffuse, uv);\n";
+            fragmentShader += "   vec4 color = texture(diffuse, Tex);\n";
         }
         else
         {
@@ -108,7 +117,7 @@ void Shader::build(ShaderPreferences prefs)
 
         if(prefs.HasSpecularTexture)
         {
-            fragmentShader += "   vec4 spec = texture(specular, uv);\n";
+            fragmentShader += "   vec4 spec = texture(specular, Tex);\n";
         }
         else
         {
@@ -117,14 +126,16 @@ void Shader::build(ShaderPreferences prefs)
 
         if(prefs.HasSmoothTexture)
         {
-            fragmentShader += "   float smooth = texture(smoothness, uv).r;\n";
+            fragmentShader += "   float sm = texture(smoothness, Tex).r;\n";
         }
         else
         {
-            fragmentShader += "   float smooth = smoothness;\n";
+            fragmentShader += "   float sm = smoothness;\n";
         }
 
-        fragmentShader += "   vec4 output;\n";
+        fragmentShader += "   vec4 output = vec4(0,0,0,1);\n"
+                          "   vec3 eyeN = normalize(eye.xyz);\n"
+                          "   vec3 norm = normalize(N);\n";
 
         if(prefs.HasAmbient)
         {
@@ -133,10 +144,14 @@ void Shader::build(ShaderPreferences prefs)
 
         for(int i = 0; i < prefs.Lights; ++i)
         {
-            fragmentShader += "   float n" + QString::number(i)
-                                + " = dot(normal, lightPositions[" + QString::number(i) +"]);\n"
-                              "   output += diffuse*lightColors[" + QString::number(i) +"]*n;\n";
+            fragmentShader += "   vec3 L" + QString::number(i)
+                                + " = normalize(lightPositions[" + QString::number(i) +"] + eyeN);\n"
+                              "   float N" + QString::number(i)
+                                + " = max(dot(norm, L" + QString::number(i) +"), 0.0);\n"
+                              "   output += color*lightColors[" + QString::number(i) +"]*N"+QString::number(i)+";\n";
         }
+
+        fragmentShader += "   fragColor = clamp(output,0,1);\n";
     }
 
     fragmentShader += "}\n";
@@ -172,13 +187,15 @@ void Shader::build(ShaderPreferences prefs)
     }
 
     mProgram->enableAttributeArray("vertex");
-    mProgram->setAttributeBuffer("vertex", GL_FLOAT, 0, 3, 8*sizeof(float));
+    mProgram->setAttributeBuffer("vertex", GL_FLOAT, 0, 3, 8*sizeof(GLfloat));
 
     mProgram->enableAttributeArray("normal");
-    mProgram->setAttributeBuffer("normal", GL_FLOAT, 3*sizeof(float), 3, 8*sizeof(float));
+    mProgram->setAttributeBuffer("normal", GL_FLOAT, 3*sizeof(GLfloat), 3, 8*sizeof(GLfloat));
 
     mProgram->enableAttributeArray("uv");
-    mProgram->setAttributeBuffer("uv", GL_FLOAT, 6*sizeof(float), 2, 8*sizeof(float));
+    mProgram->setAttributeBuffer("uv", GL_FLOAT, 6, 2, 8*sizeof(GLfloat));
+
+    mPreferences = prefs;
 }
 
 void Shader::bind(const QMatrix4x4& mv, Camera* camera, Material* m, Environment *env)
@@ -210,7 +227,7 @@ void Shader::bind(const QMatrix4x4& mv, Camera* camera, Material* m, Environment
             QColor col = env->light(i)->color();
 
             colors[i] = QVector4D(col.redF(), col.greenF(), col.blueF(), col.alphaF());
-            positions[i] = env->light(i)->position();
+            positions[i] = camera->view() * env->light(i)->position();
         }
 
         mProgram->setUniformValueArray(mLightColorLoc, colors, mPreferences.Lights);
