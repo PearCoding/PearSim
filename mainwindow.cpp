@@ -90,6 +90,7 @@ void MainWindow::onMessageLogged(QOpenGLDebugMessage msg)
         break;
     case QOpenGLDebugMessage::LowSeverity:
         item->setBackgroundColor(Qt::yellow);
+        return;//Ignore
         break;
     }
 

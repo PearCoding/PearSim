@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
     format.setMajorVersion(4);
     format.setMinorVersion(3);
     format.setSamples(4);
+    format.setRenderableType(QSurfaceFormat::OpenGL);
     format.setProfile(QSurfaceFormat::CoreProfile);
 
 #ifdef QT_DEBUG

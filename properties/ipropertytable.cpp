@@ -10,20 +10,25 @@ IPropertyTable::~IPropertyTable()
 
 }
 
-void IPropertyTable::add(const QString& key, const QVariant& value, const FeatureTable& features)
+void IPropertyTable::add(const QString& key, const QVariant& value, const PropertyDefinition& def)
 {
     mProperties[key] = value;
-    mFeatures[key] = features;
+    mDefinitions[key] = def;
+}
+
+void IPropertyTable::addAction(const ActionDefinition& def)
+{
+    mActions.append(def);
 }
 
 void IPropertyTable::setValue(const QString& key, const QVariant& value)
 {
     if(!mProperties.contains(key))
     {
-        FeatureTable features;
-        features.ParentKey = "";
+        PropertyDefinition def;
+        def.ParentKey = "";
 
-        mFeatures[key] = features;
+        mDefinitions[key] = def;
     }
 
     mProperties[key] = value;
@@ -34,14 +39,14 @@ QVariant IPropertyTable::value(const QString& key) const
     return mProperties[key];
 }
 
-void IPropertyTable::setFeatures(const QString& key, const FeatureTable& features)
+void IPropertyTable::setPropertyDefinition(const QString& key, const PropertyDefinition& def)
 {
     Q_ASSERT(mProperties.contains(key));
 
-    mFeatures[key] = features;
+    mDefinitions[key] = def;
 }
 
-FeatureTable IPropertyTable::features(const QString& key) const
+PropertyDefinition IPropertyTable::propertyDefinition(const QString& key) const
 {
-    return mFeatures[key];
+    return mDefinitions[key];
 }
