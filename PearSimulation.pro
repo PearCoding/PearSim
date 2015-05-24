@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     renderer/renderer.cpp \
     renderer/light.cpp \
     renderer/shader.cpp \
-    renderer/environment.cpp
+    renderer/environment.cpp \
+    properties/ipropertytable.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
@@ -53,6 +54,7 @@ HEADERS  += mainwindow.h \
     renderer/renderer.h \
     renderer/light.h \
     renderer/shader.h \
-    renderer/environment.h
+    renderer/environment.h \
+    properties/ipropertytable.h
 
 FORMS    += mainwindow.ui

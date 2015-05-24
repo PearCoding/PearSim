@@ -16,6 +16,11 @@ IInteractor* ISimulation::interactor()
     return nullptr;
 }
 
+IPropertyTable* ISimulation::properties()
+{
+    return nullptr;
+}
+
 void ISimulation::draw(Renderer*)
 {
 

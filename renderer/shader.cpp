@@ -133,13 +133,13 @@ void Shader::build(ShaderPreferences prefs)
             fragmentShader += "   float sm = smoothness;\n";
         }
 
-        fragmentShader += "   vec4 output = vec4(0,0,0,1);\n"
+        fragmentShader += "   vec4 fragOut = vec4(0,0,0,1);\n"
                           "   vec3 eyeN = normalize(eye.xyz);\n"
                           "   vec3 norm = normalize(N);\n";
 
         if(prefs.HasAmbient)
         {
-            fragmentShader += "   output = (color*ambientColor)*ambientFactor;\n";
+            fragmentShader += "   fragOut = (color*ambientColor)*ambientFactor;\n";
         }
 
         for(int i = 0; i < prefs.Lights; ++i)
@@ -147,12 +147,12 @@ void Shader::build(ShaderPreferences prefs)
             fragmentShader += QString("   vec3 L%1 = normalize(lightPositions[%1] + eyeN);\n"
                               "   float N%1 = max(dot(norm, L%1), 0.0);\n"
                               "   vec3 R%1 = normalize(-reflect(L%1,norm));\n"
-                              "   output += color * lightColors[%1] * N%1;\n"
-                              "   output += spec * lightColors[%1] * pow(max(dot(R%1,eyeN),0.0),sm);\n")
+                              "   fragOut += color * lightColors[%1] * N%1;\n"
+                              "   fragOut += spec * lightColors[%1] * pow(max(dot(R%1,eyeN),0.0),sm);\n")
                     .arg(i);
         }
 
-        fragmentShader += "   fragColor = clamp(output,0,1);\n";
+        fragmentShader += "   fragColor = clamp(fragOut,0,1);\n";
     }
 
     fragmentShader += "}\n";

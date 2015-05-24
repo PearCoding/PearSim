@@ -10,6 +10,7 @@ enum SimulationFlags
 };
 
 class IInteractor;
+class IPropertyTable;
 class Renderer;
 class ISimulation : public QObject, protected QOpenGLFunctions
 {
@@ -22,6 +23,7 @@ public:
     virtual int flags() const = 0;
 
     virtual IInteractor* interactor();
+    virtual IPropertyTable* properties();
 
     virtual void draw(Renderer* renderer);
     virtual void resizeResources(int w, int h);
