@@ -7,6 +7,7 @@
 #include "actors/rectangular.h"
 #include "actors/emptyactor.h"
 #include "actors/sphere.h"
+#include "actors/mesh.h"
 
 #include "renderer/material.h"
 #include "renderer/environment.h"
@@ -43,6 +44,7 @@ private:
     Rectangular mEndBound;
     Sphere mFirstSphere;
     Sphere mSecondSphere;
+    Mesh mMeshActor;
 
     Material mSphereMaterial;
     Environment mEnvironment;

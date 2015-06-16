@@ -1,9 +1,12 @@
 #include "mesh.h"
+#include "camera.h"
+#include "renderer/shader.h"
 
 Mesh::Mesh(IActor *parent) :
     IActor(parent),
     mShader(nullptr), mMaterial(nullptr),
-    mIndexVBO(QOpenGLBuffer::IndexBuffer)
+    mIndexVBO(QOpenGLBuffer::IndexBuffer),
+    mVertexData(nullptr), mIndexData(nullptr)
 {
 }
 
@@ -51,13 +54,25 @@ void Mesh::cleanup()
         delete mShader;
         mShader = nullptr;
     }
+
+    if(mVertexData)
+    {
+        delete [] mVertexData;
+        mVertexData = nullptr;
+    }
+
+    if(mIndexData)
+    {
+        delete [] mIndexData;
+        mIndexData = nullptr;
+    }
 }
 
 void Mesh::draw(Camera* camera, Environment *env)
 {
     Q_ASSERT(camera);
 
-    if(!mMaterial)
+    if(!mMaterial && ! mVertexData)
     {
         return;
     }
