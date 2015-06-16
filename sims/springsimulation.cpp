@@ -31,6 +31,8 @@ SpringSimulation::SpringSimulation() :
 
     mFirstSphere.setMaterial(&mSphereMaterial);
     mSecondSphere.setMaterial(&mSphereMaterial);
+    mStartBound.setMaterial(&mSphereMaterial);
+    mEndBound.setMaterial(&mSphereMaterial);
 }
 
 SpringSimulation::~SpringSimulation()

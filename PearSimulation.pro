@@ -32,7 +32,9 @@ SOURCES += main.cpp\
     renderer/light.cpp \
     renderer/shader.cpp \
     renderer/environment.cpp \
-    properties/ipropertytable.cpp
+    properties/ipropertytable.cpp \
+    actors/mesh.cpp \
+    loader/wavefrontloader.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
@@ -55,6 +57,9 @@ HEADERS  += mainwindow.h \
     renderer/light.h \
     renderer/shader.h \
     renderer/environment.h \
-    properties/ipropertytable.h
+    properties/ipropertytable.h \
+    actors/mesh.h \
+    loader/meshloader.h \
+    loader/wavefrontloader.h
 
 FORMS    += mainwindow.ui

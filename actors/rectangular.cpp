@@ -1,9 +1,11 @@
 #include "rectangular.h"
 #include "camera.h"
 
+#include "renderer/shader.h"
+
 Rectangular::Rectangular(IActor *parent):
     IActor(parent),
-    mProgram(nullptr),
+    mShader(nullptr), mMaterial(nullptr),
     mIndexVBO(QOpenGLBuffer::IndexBuffer),
     mColor(Qt::white)
 {
@@ -25,36 +27,8 @@ GLint Rectangular::sIndicesData[] =
     1, 5, 6, 6, 2, 1
 };
 
-static const char *vertexShaderSourceCore =
-    "#version 150\n"
-    "in vec4 vertex;\n"
-    "uniform mat4 projMatrix;\n"
-    "uniform mat4 mvMatrix;\n"
-    "void main() {\n"
-    "   gl_Position = projMatrix * mvMatrix * vertex;\n"
-    "}\n";
-
-static const char *fragmentShaderSourceCore =
-    "#version 150\n"
-    "uniform vec4 color;\n"
-    "out highp vec4 fragColor;\n"
-    "void main() {\n"
-    "   fragColor = color;\n"
-    "}\n";
-
 void Rectangular::build(float xw, float yw, float zw)
 {
-    mProgram = new QOpenGLShaderProgram;
-    mProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSourceCore);
-    mProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSourceCore);
-    mProgram->bindAttributeLocation("vertex", 0);
-    mProgram->link();
-
-    mProgram->bind();
-    mProjMatrixLoc = mProgram->uniformLocation("projMatrix");
-    mMVMatrixLoc = mProgram->uniformLocation("mvMatrix");
-    mColorLoc = mProgram->uniformLocation("color");
-
     mVAO.create();
     mVAO.bind();
 
@@ -62,27 +36,61 @@ void Rectangular::build(float xw, float yw, float zw)
     const float yw2 = yw / 2;
     const float zw2 = zw / 2;
 
-    mVertexData[0]  = -xw2; mVertexData[1]  = -yw2; mVertexData[2]  =  zw2;
-    mVertexData[3]  =  xw2; mVertexData[4]  = -yw2; mVertexData[5]  =  zw2;
-    mVertexData[6]  =  xw2; mVertexData[7]  =  yw2; mVertexData[8]  =  zw2;
-    mVertexData[9]  = -xw2; mVertexData[10] =  yw2; mVertexData[11] =  zw2;
-    mVertexData[12] = -xw2; mVertexData[13] = -yw2; mVertexData[14] = -zw2;
-    mVertexData[15] =  xw2; mVertexData[16] = -yw2; mVertexData[17] = -zw2;
-    mVertexData[18] =  xw2; mVertexData[19] =  yw2; mVertexData[20] = -zw2;
-    mVertexData[21] = -xw2; mVertexData[22] =  yw2; mVertexData[23] = -zw2;
+    int t = 0;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;   //Vertex
+    mVertexData[t+3] = -1; mVertexData[t+4] = -1; mVertexData[t+5] = 1;         //Normals
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+
+    t += 8;
+    mVertexData[t+0] =  xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] =  1; mVertexData[t+4] = -1; mVertexData[t+5] = 1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+
+    t += 8;
+    mVertexData[t+0]  =  xw2; mVertexData[t+1]  =  yw2; mVertexData[t+2]  =  zw2;
+    mVertexData[t+3]  =  1; mVertexData[t+4]  =  1; mVertexData[t+5]  =  1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+
+    t += 8;
+    mVertexData[t+0]  = -xw2; mVertexData[t+1] =  yw2; mVertexData[t+2] =  zw2;
+    mVertexData[t+3]  = -1; mVertexData[t+4] =  1; mVertexData[t+5] =  1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = -1; mVertexData[t+4] = -1; mVertexData[t+5] = -1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+
+    t += 8;
+    mVertexData[t+0] =  xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] =  1; mVertexData[t+4] = -1; mVertexData[t+5] = -1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+
+    t += 8;
+    mVertexData[t+0] =  xw2; mVertexData[t+1] =  yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] =  1; mVertexData[t+4] =  1; mVertexData[t+5] = -1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] =  yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = -1; mVertexData[t+4] =  1; mVertexData[t+5] = -1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;
+
+    t += 8;
 
     mVBO.create();
     mVBO.bind();
-    mVBO.allocate(mVertexData, 8 * sizeof(GLfloat) * 3);
-
-    mProgram->enableAttributeArray("vertex");
-    mProgram->setAttributeBuffer("vertex", GL_FLOAT, 0, 3);
+    mVBO.allocate(mVertexData, t * sizeof(GLfloat));
 
     mIndexVBO.create();
     mIndexVBO.bind();
     mIndexVBO.allocate(sIndicesData, 36 * sizeof(GLint));
 
-    qDebug() << "Construction finished";
+    ShaderPreferences prefs;
+    prefs.HasAmbient = true;
+    prefs.Lights = 1;
+    mShader = new Shader;
+    mShader->build(prefs);
 }
 
 void Rectangular::cleanup()
@@ -91,10 +99,10 @@ void Rectangular::cleanup()
     mVBO.destroy();
     mVAO.destroy();
 
-    if(mProgram)
+    if(mShader)
     {
-        delete mProgram;
-        mProgram = nullptr;
+        delete mShader;
+        mShader = nullptr;
     }
 }
 
@@ -102,14 +110,17 @@ void Rectangular::draw(Camera* camera, Environment *env)
 {
     Q_ASSERT(camera);
 
+    if(!mMaterial)
+    {
+        return;
+    }
+
     mVAO.bind();
-    mProgram->bind();
-    mProgram->setUniformValue(mProjMatrixLoc, camera->projection());
-    mProgram->setUniformValue(mMVMatrixLoc, camera->view() * matrix());
-    mProgram->setUniformValue(mColorLoc, mColor);
+
+    mShader->bind(camera->view() * matrix(), camera, mMaterial, env);
 
     //glDrawArrays(GL_TRIANGLES, 0, 8);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-    mProgram->release();
+    mShader->release();
 }

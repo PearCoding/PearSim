@@ -3,11 +3,12 @@
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
-#include <QOpenGLShaderProgram>
 #include <QColor>
 
 #include "iactor.h"
 
+class Shader;
+class Material;
 class Rectangular : public IActor
 {
 public:
@@ -29,18 +30,26 @@ public:
         return mColor;
     }
 
+    Material* material() const
+    {
+        return mMaterial;
+    }
+
+    void setMaterial(Material* material)
+    {
+        mMaterial = material;
+    }
+
 private:
     QOpenGLVertexArrayObject mVAO;
     QOpenGLBuffer mVBO;
     QOpenGLBuffer mIndexVBO;
-    QOpenGLShaderProgram *mProgram;
 
-    int mProjMatrixLoc;
-    int mMVMatrixLoc;
-    int mColorLoc;
+    Shader* mShader;
+    Material* mMaterial;
 
     int mVertexCount;
-    GLfloat mVertexData[8*3];
+    GLfloat mVertexData[8*8];
 
     QColor mColor;
 

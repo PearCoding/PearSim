@@ -152,7 +152,7 @@ void Shader::build(ShaderPreferences prefs)
                     .arg(i);
         }
 
-        fragmentShader += "   fragColor = clamp(fragOut,0,1);\n";
+        fragmentShader += "   fragColor = clamp(vec4(N,1),0,1);\n";
     }
 
     fragmentShader += "}\n";
