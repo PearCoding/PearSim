@@ -77,8 +77,6 @@ void MainWindow::makeScreenshot()
 
 void MainWindow::onMessageLogged(QOpenGLDebugMessage msg)
 {
-    qDebug() << msg.severity() << " " << msg.message();
-
     QListWidgetItem* item = new QListWidgetItem(msg.message());
     switch(msg.severity())
     {
@@ -94,6 +92,7 @@ void MainWindow::onMessageLogged(QOpenGLDebugMessage msg)
         break;
     }
 
+    qDebug() << msg.severity() << " " << msg.message();
     ui->logWidget->addItem(item);
 }
 

@@ -24,16 +24,12 @@ struct UniqueVertex
     int VIn;
     int TIn;
     int NIn;
+    uint ID;//Will be set later
 };
 
 inline bool operator == (const UniqueVertex& f1, const UniqueVertex& f2)
 {
     return f1.VIn == f2.VIn && f1.TIn == f2.TIn && f1.NIn == f2.NIn;
-}
-
-inline uint qHash(const UniqueVertex &key)
-{
-    return (key.VIn + key.NIn*1000000 + key.TIn*1000000*100000);
 }
 
 struct Face//Indices to unique vertices
@@ -87,10 +83,17 @@ UniqueVertex unpackFaceVertex(const QString& str)
         Norm = Vert;
     }
 
+    bool ok;
     UniqueVertex v;
-    v.VIn = Vert.toInt()-1;
-    v.TIn = Tex.toInt()-1;
-    v.NIn = Norm.toInt()-1;
+    v.VIn = Vert.toInt(&ok)-1;
+    v.TIn = Tex.toInt(&ok)-1;
+    v.NIn = Norm.toInt(&ok)-1;
+    v.ID = 0;
+
+    if(!ok)
+    {
+        qWarning() << "Invalid face part definition";
+    }
 
     return v;
 }
@@ -113,6 +116,7 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
     QVector<UniqueVertex> uniqueVertices;
     QVector<Face> faces;
 
+    int lnr = 1;
     while (!input.atEnd())
     {
         QByteArray line = input.readLine().trimmed();
@@ -159,10 +163,12 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
         {
             commands.pop_front();
 
+            bool ok;
+
             QVector3D vert;
-            vert.setX(commands.front().toFloat());
+            vert.setX(commands.front().toFloat(&ok));
             commands.pop_front();
-            vert.setY(commands.front().toFloat());
+            vert.setY(commands.front().toFloat(&ok));
             commands.pop_front();
 
             if(commands.empty())
@@ -171,7 +177,12 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
             }
             else
             {
-                vert.setZ(commands.front().toFloat());
+                vert.setZ(commands.front().toFloat(&ok));
+            }
+
+            if(!ok)
+            {
+                qWarning() << "["<< lnr << "] Invalid floating point values";
             }
 
             vertices.append(vert);
@@ -180,11 +191,18 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
         {
             commands.pop_front();
 
+            bool ok;
+
             QVector2D tex;
-            tex.setX(commands.front().toFloat());
+            tex.setX(commands.front().toFloat(&ok));
             commands.pop_front();
-            tex.setY(commands.front().toFloat());
+            tex.setY(commands.front().toFloat(&ok));
             commands.pop_front();
+
+            if(!ok)
+            {
+                qWarning() << "["<< lnr << "] Invalid floating point values";
+            }
 
             texels.append(tex);
         }
@@ -192,10 +210,11 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
         {
             commands.pop_front();
 
+            bool ok;
             QVector3D norm;
-            norm.setX(commands.front().toFloat());
+            norm.setX(commands.front().toFloat(&ok));
             commands.pop_front();
-            norm.setY(commands.front().toFloat());
+            norm.setY(commands.front().toFloat(&ok));
             commands.pop_front();
 
             if(commands.empty())
@@ -204,7 +223,12 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
             }
             else
             {
-                norm.setZ(commands.front().toFloat());
+                norm.setZ(commands.front().toFloat(&ok));
+            }
+
+            if(!ok)
+            {
+                qWarning() << "["<< lnr << "] Invalid floating point values";
             }
 
             normals.append(norm);
@@ -222,14 +246,8 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
                 UniqueVertex uv3 = unpackFaceVertex(commands.first());
                 commands.pop_front();
 
-                int fi1 = uniqueVertices.size();
-                int fi2 = fi1+1;
-                int fi3 = fi1+2;
-
                 int it1 = uniqueVertices.indexOf(uv1);
-                int it2 = uniqueVertices.indexOf(uv2);
-                int it3 = uniqueVertices.indexOf(uv3);
-
+                int fi1 = uniqueVertices.size();
                 if(it1 != -1)
                 {
                     fi1 = it1;
@@ -239,6 +257,8 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
                     uniqueVertices.append(uv1);
                 }
 
+                int it2 = uniqueVertices.indexOf(uv2);
+                int fi2 = uniqueVertices.size();
                 if(it2 != -1)
                 {
                     fi2 = it2;
@@ -248,6 +268,8 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
                     uniqueVertices.append(uv2);
                 }
 
+                int it3 = uniqueVertices.indexOf(uv3);
+                int fi3 = uniqueVertices.size();
                 if(it3 != -1)
                 {
                     fi3 = it3;
@@ -260,7 +282,7 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
                 if(!commands.isEmpty())//Quad
                 {
                     UniqueVertex uv4 = unpackFaceVertex(commands.first());
-                    int fi4 = fi1+3;
+                    int fi4 = uniqueVertices.size();
                     int it4 = uniqueVertices.indexOf(uv4);
 
                     if(it4 != -1)
@@ -279,9 +301,9 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
                     faces.append(f1);
 
                     Face f2;
-                    f2.UIn[0] = fi2;
-                    f2.UIn[1] = fi3;
-                    f2.UIn[2] = fi4;
+                    f2.UIn[0] = fi4;
+                    f2.UIn[1] = fi2;
+                    f2.UIn[2] = fi3;
                     faces.append(f2);
                 }
                 else//Triangle
@@ -295,25 +317,26 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
             }
         }
         //Everything else is ignored
+
+        ++lnr;
     }
 
     // Data conversion [Simple triangles]
     float* vertexData  = new float[uniqueVertices.size()*(3+3+2)];
     uint* indexData = new uint[faces.size()*3];
 
-    QHash<UniqueVertex, uint> indexMap;
-    GLint indexCounter = 0;
+    int indexCounter = 0;
     int fitr = 0;
     foreach(Face f, faces)
     {
         for(int i = 0; i < 3; ++i)
         {
-            UniqueVertex v = uniqueVertices.at(f.UIn[i]);
+            UniqueVertex& v = uniqueVertices[f.UIn[i]];
 
             int in = indexCounter;
-            if(indexMap.contains(v))
+            if(v.ID != 0)
             {
-                in = indexMap[v];
+                in = v.ID-1;
             }
             else
             {
@@ -325,7 +348,7 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
                 vertexData[index] = vert.x()*mScale; vertexData[index+1] = vert.y()*mScale; vertexData[index+2] = vert.z()*mScale;
                 vertexData[index+3] = norm.x(); vertexData[index+4] = norm.y(); vertexData[index+5] = norm.z();
                 vertexData[index+6] = tex.x(); vertexData[index+7] = tex.y();
-                indexMap[v] = in;
+                v.ID = in+1;
                 indexCounter++;
             }
             indexData[fitr*3+i] = in;
@@ -335,5 +358,6 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
     }
 
     // Load to mesh
-    mesh->load(vertexData, uniqueVertices.size(), indexData, faces.size());
+    mesh->load(vertexData, uniqueVertices.size(), indexData, faces.size()*3);
+    qDebug() << uniqueVertices.size() << " " << faces.size();
 }
