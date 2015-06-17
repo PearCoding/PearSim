@@ -1,31 +1,30 @@
-#ifndef SPRINGSIMULATION_H
-#define SPRINGSIMULATION_H
+#ifndef WATERSIMULATION_H
+#define WATERSIMULATION_H
 
 #include "isimulation.h"
 #include "camera.h"
 
-#include "actors/rectangular.h"
 #include "actors/emptyactor.h"
-#include "actors/sphere.h"
+#include "actors/mesh.h"
 
 #include "renderer/material.h"
 #include "renderer/environment.h"
 
 class ActorInteractor;
-class SpringSimulation : public ISimulation
+class WaterSimulation : public ISimulation
 {
 public:
-    SpringSimulation();
-    ~SpringSimulation();
+    WaterSimulation();
+    ~WaterSimulation();
 
     QString name() const
     {
-        return "Spring-Mass";
+        return "Water";
     }
 
     int flags() const
     {
-        return SF_Step;
+        return SF_None;
     }
 
     IInteractor* interactor();
@@ -39,15 +38,12 @@ private:
     Camera mCamera;
 
     EmptyActor mRootActor;
-    Rectangular mStartBound;
-    Rectangular mEndBound;
-    Sphere mFirstSphere;
-    Sphere mSecondSphere;
+    Mesh mMeshActor;
 
-    Material mSphereMaterial;
+    Material mMaterial;
     Environment mEnvironment;
 
     ActorInteractor* mInteractor;
 };
 
-#endif // SPRINGSIMULATION_H
+#endif // WATERSIMULATION_H

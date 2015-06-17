@@ -3,6 +3,7 @@
 
 #include "sims/blocksimulation.h"
 #include "sims/springsimulation.h"
+#include "sims/watersimulation.h"
 
 #include <QFileDialog>
 #include <QStandardPaths>
@@ -26,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->simulationView->setLogger(mGLLogger);
 
-    openSimulation( new SpringSimulation );
+    openSimulation( new WaterSimulation );
 
     loadSettings();
 }

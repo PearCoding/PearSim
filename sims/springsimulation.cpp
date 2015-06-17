@@ -3,14 +3,12 @@
 
 #include "renderer/light.h"
 
-#include "loader/wavefrontloader.h"
-
 SpringSimulation::SpringSimulation() :
     ISimulation(),
     mCamera()
 {
     mSphereMaterial.setDiffuse(Qt::blue);
-    mSphereMaterial.setSpecular(QColor(1, 0,0));
+    mSphereMaterial.setSpecular(QColor(255, 0,0));
     mSphereMaterial.setSmoothness(10);
 
     //mEnvironment.setAmbientFactor(1.0f);
@@ -25,7 +23,6 @@ SpringSimulation::SpringSimulation() :
     mEndBound.setParent(&mRootActor);
     mFirstSphere.setParent(&mRootActor);
     mSecondSphere.setParent(&mRootActor);
-    mMeshActor.setParent(&mRootActor);
 
     mStartBound.setPosition(QVector3D(0.5f, 0, 0));
     mEndBound.setPosition(QVector3D(-0.5f, 0, 0));
@@ -36,7 +33,6 @@ SpringSimulation::SpringSimulation() :
     mSecondSphere.setMaterial(&mSphereMaterial);
     mStartBound.setMaterial(&mSphereMaterial);
     mEndBound.setMaterial(&mSphereMaterial);
-    mMeshActor.setMaterial(&mSphereMaterial);
 }
 
 SpringSimulation::~SpringSimulation()
@@ -56,7 +52,6 @@ void SpringSimulation::draw(Renderer*)
     mEndBound.draw(&mCamera, &mEnvironment);
     mFirstSphere.draw(&mCamera, &mEnvironment);
     mSecondSphere.draw(&mCamera, &mEnvironment);
-    mMeshActor.draw(&mCamera, &mEnvironment);
 }
 
 void SpringSimulation::resizeResources(int w, int h)
@@ -80,10 +75,6 @@ void SpringSimulation::initResources()
     mFirstSphere.build(0.1f, 16, 16);
     mSecondSphere.build(0.1f, 16, 16);
 
-    WavefrontLoader loader;
-    loader.setScale(0.025f);
-    loader.load("../PearSimulation/content/torus.obj", &mMeshActor);
-
     glClearColor(0,0,0.2f, 1);
     glEnable(GL_DEPTH_TEST);
 }
@@ -94,7 +85,6 @@ void SpringSimulation::cleanResources()
     mEndBound.cleanup();
     mFirstSphere.cleanup();
     mSecondSphere.cleanup();
-    mMeshActor.cleanup();
 
     ISimulation::cleanResources();
 }

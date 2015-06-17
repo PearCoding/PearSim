@@ -19,6 +19,7 @@ SOURCES += main.cpp\
     sims/isimulation.cpp \
     sims/blocksimulation.cpp \
     sims/springsimulation.cpp \
+    sims/watersimulation.cpp \
     interactors/iinteractor.cpp \
     interactors/camerainteractor.cpp \
     interactors/actorinteractor.cpp \
@@ -42,6 +43,7 @@ HEADERS  += mainwindow.h \
     sims/isimulation.h \
     sims/blocksimulation.h \
     sims/springsimulation.h \
+    sims/watersimulation.h \
     interactors/iinteractor.h \
     interactors/camerainteractor.h \
     interactors/actorinteractor.h \
