@@ -5,8 +5,8 @@
 #include "sims/isimulation.h"
 #include "interactors/iinteractor.h"
 
-SimulationView::SimulationView(QWidget* parent) :
-    QOpenGLWidget(parent),
+SimulationView::SimulationView(QWidget* parent, Qt::WindowFlags f) :
+    QOpenGLWidget(parent, f),
     mSimulation(nullptr), mLogger(nullptr)
 {
 }
@@ -28,6 +28,7 @@ void SimulationView::setLogger(QOpenGLDebugLogger* log)
 
 void SimulationView::cleanup()
 {
+    makeCurrent();
     if(mSimulation)
     {
         mSimulation->cleanResources();
@@ -35,6 +36,7 @@ void SimulationView::cleanup()
     }
 
     mRenderer.cleanup();
+    doneCurrent();
 }
 
 void SimulationView::initializeGL()

@@ -342,8 +342,18 @@ void WavefrontLoader::load(const QString& file, Mesh* mesh)
             {
                 size_t index = indexCounter*(3+3+2);
                 QVector3D vert = vertices.at(v.VIn);
-                QVector2D tex = texels.at(v.TIn);
-                QVector3D norm = normals.at(v.NIn);
+
+                QVector2D tex;
+                if(texels.size() > v.TIn)
+                {
+                    tex = texels.at(v.TIn);
+                }
+
+                QVector3D norm;
+                if(normals.size() > v.NIn)
+                {
+                    norm = normals.at(v.NIn);
+                }
 
                 vertexData[index] = vert.x()*mScale; vertexData[index+1] = vert.y()*mScale; vertexData[index+2] = vert.z()*mScale;
                 vertexData[index+3] = norm.x(); vertexData[index+4] = norm.y(); vertexData[index+5] = norm.z();

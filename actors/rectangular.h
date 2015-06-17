@@ -49,7 +49,7 @@ private:
     Material* mMaterial;
 
     int mVertexCount;
-    GLfloat mVertexData[8*8];
+    GLfloat mVertexData[24*8];
 
     QColor mColor;
 

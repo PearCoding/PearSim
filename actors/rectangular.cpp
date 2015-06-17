@@ -19,12 +19,18 @@ Rectangular::~Rectangular()
 
 GLint Rectangular::sIndicesData[] =
 {
-    0, 1, 2, 2, 3, 0,
-    3, 2, 6, 6, 7, 3,
-    7, 6, 5, 5, 4, 7,
-    4, 0, 3, 3, 7, 4,
-    0, 1, 5, 5, 4, 0,
-    1, 5, 6, 6, 2, 1
+    0, 2, 1,
+    0, 3, 2,
+    4, 5, 6,
+    4, 6, 7,
+    8, 9, 10,
+    8, 10, 11,
+    12, 15, 14,
+    12, 14, 13,
+    16, 17, 18,
+    16, 18, 19,
+    20, 23, 22,
+    20, 22, 21
 };
 
 void Rectangular::build(float xw, float yw, float zw)
@@ -37,44 +43,130 @@ void Rectangular::build(float xw, float yw, float zw)
     const float zw2 = zw / 2;
 
     int t = 0;
-    mVertexData[t+0] = -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;   //Vertex
-    mVertexData[t+3] = -1; mVertexData[t+4] = -1; mVertexData[t+5] = 1;         //Normals
-    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+    // BOTTOM
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;   //Vertex
+    mVertexData[t+3] = 0; mVertexData[t+4] = 0; mVertexData[t+5] = -1;         //Normals
+    mVertexData[t+6] = 0; mVertexData[t+7] = 1;                               //UV
 
     t += 8;
-    mVertexData[t+0] =  xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;
-    mVertexData[t+3] =  1; mVertexData[t+4] = -1; mVertexData[t+5] = 1;
-    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+    mVertexData[t+0] =  -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 0; mVertexData[t+5] = -1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;
 
     t += 8;
-    mVertexData[t+0]  =  xw2; mVertexData[t+1]  =  yw2; mVertexData[t+2]  =  zw2;
-    mVertexData[t+3]  =  1; mVertexData[t+4]  =  1; mVertexData[t+5]  =  1;
-    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+    mVertexData[t+0] = xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 0; mVertexData[t+5] = -1;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 0;
 
     t += 8;
-    mVertexData[t+0]  = -xw2; mVertexData[t+1] =  yw2; mVertexData[t+2] =  zw2;
-    mVertexData[t+3]  = -1; mVertexData[t+4] =  1; mVertexData[t+5] =  1;
-    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+    mVertexData[t+0] = xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 0; mVertexData[t+5] = -1;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 1;
 
+    // TOP
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 0; mVertexData[t+5] = 1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 1;
+
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 0; mVertexData[t+5] = 1;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] =  yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 0; mVertexData[t+5] = 1;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 0; mVertexData[t+5] = 1;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 1;
+
+    // BACK
     t += 8;
     mVertexData[t+0] = -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;
-    mVertexData[t+3] = -1; mVertexData[t+4] = -1; mVertexData[t+5] = -1;
-    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
+    mVertexData[t+3] = 0; mVertexData[t+4] = -1; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 1;
 
     t += 8;
-    mVertexData[t+0] =  xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;
-    mVertexData[t+3] =  1; mVertexData[t+4] = -1; mVertexData[t+5] = -1;
-    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
-
-    t += 8;
-    mVertexData[t+0] =  xw2; mVertexData[t+1] =  yw2; mVertexData[t+2] = -zw2;
-    mVertexData[t+3] =  1; mVertexData[t+4] =  1; mVertexData[t+5] = -1;
-    mVertexData[t+6] = 0; mVertexData[t+7] = 0;                               //UV
-
-    t += 8;
-    mVertexData[t+0] = -xw2; mVertexData[t+1] =  yw2; mVertexData[t+2] = -zw2;
-    mVertexData[t+3] = -1; mVertexData[t+4] =  1; mVertexData[t+5] = -1;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = -1; mVertexData[t+5] = 0;
     mVertexData[t+6] = 0; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = -1; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = -1; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 1;
+
+    // FRONT
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 1; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 1;
+
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 1; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 1; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 0; mVertexData[t+4] = 1; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 1;
+
+    // LEFT
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = -1; mVertexData[t+4] = 0; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 1;
+
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = -1; mVertexData[t+4] = 0; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = -1; mVertexData[t+4] = 0; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = -xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = -1; mVertexData[t+4] = 0; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 1;
+
+    // RIGHT
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = 1; mVertexData[t+4] = 0; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 1;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = -yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 1; mVertexData[t+4] = 0; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 0; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = zw2;
+    mVertexData[t+3] = 1; mVertexData[t+4] = 0; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 0;
+
+    t += 8;
+    mVertexData[t+0] = xw2; mVertexData[t+1] = yw2; mVertexData[t+2] = -zw2;
+    mVertexData[t+3] = 1; mVertexData[t+4] = 0; mVertexData[t+5] = 0;
+    mVertexData[t+6] = 1; mVertexData[t+7] = 1;
 
     t += 8;
 

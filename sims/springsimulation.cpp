@@ -64,7 +64,7 @@ void SpringSimulation::resizeResources(int w, int h)
     ISimulation::resizeResources(w, h);
 
     QMatrix4x4 proj;
-    proj.perspective(45.0f, GLfloat(w) / h, 0.01f, 100.0f);
+    proj.perspective(60.0f, GLfloat(w) / h, 0.01f, 100.0f);
     mCamera.setProjection(proj);
 }
 
@@ -81,7 +81,7 @@ void SpringSimulation::initResources()
     mSecondSphere.build(0.1f, 16, 16);
 
     WavefrontLoader loader;
-    loader.setScale(0.25f);
+    loader.setScale(0.025f);
     loader.load("../PearSimulation/content/torus.obj", &mMeshActor);
 
     glClearColor(0,0,0.2f, 1);

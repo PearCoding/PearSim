@@ -41,9 +41,9 @@ void Sphere::build(float r, unsigned int slices, unsigned int segments)
     {
         for(unsigned int j = 0; j < segments; ++j)
         {
-            float x = cos(2 * M_PI * j * S) * sin( M_PI * i * R );
+            float x = sin(2 * M_PI * j * S) * sin( M_PI * i * R );
             float y = sin( -M_PI_2 + M_PI * i * R );
-            float z = sin(2 * M_PI * j * S) * sin( M_PI * i * R );
+            float z = cos(2 * M_PI * j * S) * sin( M_PI * i * R );
 
             //Vertices
             mVertexData[v++] = r * x;
@@ -56,8 +56,8 @@ void Sphere::build(float r, unsigned int slices, unsigned int segments)
             mVertexData[v++] = z;
 
             //UVs TODO
-            mVertexData[v++] = 1;
-            mVertexData[v++] = 1;
+            mVertexData[v++] = x;
+            mVertexData[v++] = z;
         }
     }
 

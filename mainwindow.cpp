@@ -33,10 +33,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete mGLLogger;
-
-    ui->simulationView->setSimulation(nullptr);
-    delete mSimulation;
+    //delete mGLLogger;
+    if(mSimulation)
+    {
+        mSimulation->cleanResources();
+        ui->simulationView->setSimulation(nullptr);
+        delete mSimulation;
+    }
 
     delete ui;
 }

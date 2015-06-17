@@ -12,8 +12,8 @@ class SimulationView : public QOpenGLWidget
     Q_OBJECT
 
 public:
-    SimulationView(QWidget* parent = nullptr);
-    ~SimulationView();
+    explicit SimulationView(QWidget* parent = nullptr, Qt::WindowFlags f = 0);
+    virtual ~SimulationView();
 
     void setSimulation(ISimulation* sim);
     void setLogger(QOpenGLDebugLogger* log);
