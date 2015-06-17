@@ -72,9 +72,9 @@ QVector3D IActor::rotation() const
 void IActor::rotate(const QVector3D& v)
 {
     mRotation += v;
-    mRotation.setX(fmod(mRotation.x(), 180));
-    mRotation.setY(fmod(mRotation.y(), 180));
-    mRotation.setZ(fmod(mRotation.z(), 180));
+    mRotation.setX(fmod(mRotation.x(), 360));
+    mRotation.setY(fmod(mRotation.y(), 360));
+    mRotation.setZ(fmod(mRotation.z(), 360));
 
     cache();
 }
