@@ -176,7 +176,7 @@ void Rectangular::build(float xw, float yw, float zw)
 
     mIndexVBO.create();
     mIndexVBO.bind();
-    mIndexVBO.allocate(sIndicesData, 36 * sizeof(GLint));
+    mIndexVBO.allocate(sIndicesData, 36 * sizeof(GLuint));
 
     ShaderPreferences prefs;
     prefs.HasAmbient = true;

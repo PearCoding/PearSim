@@ -1,16 +1,35 @@
 #ifndef DATAGRID_H
 #define DATAGRID_H
 
+#include <QtGlobal>
+#include <limits>
+
 template<typename T>
 class DataGrid
 {
 public:
+    template<typename T2>
+    class DataAccessor
+    {
+    private:
+        int mX;
+        int mWidth;
+        T2* mData;
+
+    public:
+        inline T2* operator [] (unsigned int y) const
+        {
+            return mData[mX+y*mWidth];
+        }
+    };
+
     DataGrid(unsigned int w, unsigned int h) :
         mWidth(w), mHeight(h)
     {
-        assert(w != 0 && h != 0);
+        Q_ASSERT(w != 0 && h != 0);
 
         mData = new T[mWidth*mHeight];
+        memset(mData, 0, sizeof(T)*mWidth*mHeight);
     }
 
     ~DataGrid()
@@ -35,7 +54,7 @@ public:
 
     inline bool isQuad() const
     {
-        return mWidth = mHeight;
+        return mWidth == mHeight;
     }
 
     inline T* ptr()
@@ -48,14 +67,60 @@ public:
         return mData;
     }
 
-    inline T* operator [] (unsigned int row)
+    inline DataAccessor<T> operator [] (unsigned int x)
     {
-        return mData + row*mWidth;
+        DataAccessor<T> acc;
+        acc.mX = x;
+        acc.mData = mData;
+        acc.mWidth = mWidth;
+        return a;
     }
 
-    inline const T* operator [] (unsigned int row) const
+    inline DataAccessor<const T> operator [] (unsigned int x) const
     {
-        return mData + row*mWidth;
+        DataAccessor<const T> acc;
+        acc.mX = x;
+        acc.mData = mData;
+        acc.mWidth = mWidth;
+        return acc;
+    }
+
+    inline T at(unsigned int x, unsigned int y) const
+    {
+        return mData[x + y*mWidth];
+    }
+
+    inline void set(unsigned int x, unsigned int y, T val)
+    {
+        mData[x + y*mWidth] = val;
+    }
+
+    inline T max() const
+    {
+        T m = std::numeric_limits<T>::min();
+        for(unsigned int i = 0; i < mWidth; ++i)
+        {
+            for(unsigned int j = 0; j < mHeight; ++j)
+            {
+                T t = mData[i + j*mWidth];
+                m = t > m ? t : m;
+            }
+        }
+        return m;
+    }
+
+    inline T min() const
+    {
+        T m = std::numeric_limits<T>::max();
+        for(unsigned int i = 0; i < mWidth; ++i)
+        {
+            for(unsigned int j = 0; j < mHeight; ++j)
+            {
+                T t = mData[i + j*mWidth];
+                m = t < m ? t : m;
+            }
+        }
+        return m;
     }
 
 private:

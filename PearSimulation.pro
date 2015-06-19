@@ -11,7 +11,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = PearSimulation
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     simulationview.cpp \
@@ -35,7 +34,9 @@ SOURCES += main.cpp\
     renderer/environment.cpp \
     properties/ipropertytable.cpp \
     actors/mesh.cpp \
-    loader/wavefrontloader.cpp
+    loader/wavefrontloader.cpp \
+    sims/poisson3d.cpp \
+    actors/grid.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \
@@ -62,6 +63,9 @@ HEADERS  += mainwindow.h \
     properties/ipropertytable.h \
     actors/mesh.h \
     loader/meshloader.h \
-    loader/wavefrontloader.h
+    loader/wavefrontloader.h \
+    sims/poisson3d.h \
+    actors/grid.h \
+    utils/gradient.h
 
 FORMS    += mainwindow.ui

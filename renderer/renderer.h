@@ -14,6 +14,9 @@ public:
     void beginFrame();
     void endFrame();
 
+    void startBackVisibility();
+    void endBackVisibility();
+
     void resizeResources(int width, int height);
 };
 

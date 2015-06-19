@@ -4,6 +4,7 @@
 #include "sims/blocksimulation.h"
 #include "sims/springsimulation.h"
 #include "sims/watersimulation.h"
+#include "sims/poisson3d.h"
 
 #include <QFileDialog>
 #include <QStandardPaths>
@@ -27,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->simulationView->setLogger(mGLLogger);
 
-    openSimulation( new WaterSimulation );
+    openSimulation( new Poisson3D );
 
     loadSettings();
 }

@@ -34,7 +34,7 @@ void Mesh::load(GLfloat* vertices, int vertexCount, GLuint* indices, int indexCo
 
     mIndexVBO.create();
     mIndexVBO.bind();
-    mIndexVBO.allocate(mIndexData, indexCount * sizeof(GLint));
+    mIndexVBO.allocate(mIndexData, indexCount * sizeof(GLuint));
 
     ShaderPreferences prefs;
     prefs.HasAmbient = true;

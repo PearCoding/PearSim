@@ -27,6 +27,11 @@ Light* Environment::light(size_t i)
     return mLights.at(i);
 }
 
+size_t Environment::lightCount() const
+{
+    return mLights.size();
+}
+
 void Environment::setAmbientColor(QColor& col)
 {
     mAmbientColor = col;

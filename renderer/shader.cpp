@@ -8,7 +8,6 @@
 Shader::Shader() :
     mProgram(nullptr)
 {
-
 }
 
 Shader::~Shader()
@@ -223,7 +222,11 @@ void Shader::bind(const QMatrix4x4& mv, Camera* camera, Material* m, Environment
         QVector4D colors[PS_MAX_LIGHTS];
         QVector3D positions[PS_MAX_LIGHTS];
 
-        for(int i = 0; i < mPreferences.Lights && i < PS_MAX_LIGHTS; ++i)
+        for(int i = 0;
+            i < mPreferences.Lights &&
+            i < PS_MAX_LIGHTS &&
+            i < env->lightCount();
+            ++i)
         {
             QColor col = env->light(i)->color();
 

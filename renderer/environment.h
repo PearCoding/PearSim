@@ -14,6 +14,7 @@ public:
     void addLight(Light* light);
     void removeLight(Light* light);
     Light* light(size_t i);
+    size_t lightCount() const;
 
     void setAmbientColor(QColor& col);
     QColor ambientColor() const;

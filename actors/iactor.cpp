@@ -3,13 +3,13 @@
 #include <QTransform>
 
 IActor::IActor(IActor *parent) :
-    mParent(parent), mScale(1)
+    mParent(parent), mPosition(0,0,0),
+    mRotation(0,0,0), mScale(1)
 {
 }
 
 IActor::~IActor()
 {
-
 }
 
 void IActor::setParent(IActor* actor)

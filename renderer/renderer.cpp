@@ -4,20 +4,19 @@
 
 Renderer::Renderer()
 {
-
 }
 
 Renderer::~Renderer()
 {
-
 }
 
 void Renderer::init()
 {
-    //glDisable(GL_CULL_FACE);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
+
+    glPolygonOffset(0,1);
 
     //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 }
@@ -37,7 +36,17 @@ void Renderer::endFrame()
 
 }
 
-void Renderer::resizeResources(int width, int height)
+void Renderer::startBackVisibility()
+{
+    glDisable(GL_CULL_FACE);
+}
+
+void Renderer::endBackVisibility()
+{
+    glEnable(GL_CULL_FACE);
+}
+
+void Renderer::resizeResources(int, int)
 {
 
 }
