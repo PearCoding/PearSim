@@ -1,12 +1,14 @@
 # PearSimulation
-Simulation framework for numerical, ODE, PDE and other experiments.
+Simulation and benchmarking framework for Image, 2D/3D, numerical, ODE, PDE and other experiments.
+A general software toolkit for my own "research" work.
 
 ## Status
 This software framework is still in active development and will be developed through my studies at the University of Heidelberg.
 It is just a personal project and does not represent the University of Heidelberg in any way.
 
 ## What is this repository for?
-This repository contains the whole source code and the resources for the complete framework.
+This repository contains the whole source code and the used resources.
+Parts without licenses are excluded.
 
 ## How do I get set up?
 You need the QT SDK and qmake to compile the code. Just use the PearSimulation.pro as the project file and everything should be fine.
