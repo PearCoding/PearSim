@@ -1,6 +1,6 @@
 # PearSimulation
-Simulation and benchmarking framework for Image, 2D/3D, numerical, ODE, PDE and other experiments.
-A general software toolkit for my own "research" work.
+Simulation and benchmarking framework for 2D/3D, numerical, ODE, PDE, fluids and other experiments.
+In summary, a general software toolkit for my own "research" work.
 
 ## Status
 This software framework is still in active development and will be developed through my studies at the University of Heidelberg.
