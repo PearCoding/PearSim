@@ -193,7 +193,7 @@ void Shader::build(ShaderPreferences prefs)
     mProgram->setAttributeBuffer("normal", GL_FLOAT, 3*sizeof(GLfloat), 3, 8*sizeof(GLfloat));
 
     mProgram->enableAttributeArray("uv");
-    mProgram->setAttributeBuffer("uv", GL_FLOAT, 6, 2, 8*sizeof(GLfloat));
+    mProgram->setAttributeBuffer("uv", GL_FLOAT, 6*sizeof(GLfloat), 2, 8*sizeof(GLfloat));
 
     mPreferences = prefs;
 }

@@ -24,7 +24,7 @@ struct ShaderPreferences
 class Camera;
 class Material;
 class Environment;
-class Shader
+class Shader// Generic shader for standard stuff
 {
 public:
     Shader();

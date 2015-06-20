@@ -39,6 +39,7 @@ private:
     Grid mGrid;
 
     FloatDataGrid mDataGrid;
+    StandardGradient mGradient;
 
     Material mMaterial;
     Material mContourMaterial;

@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     actors/mesh.cpp \
     loader/wavefrontloader.cpp \
     sims/poisson3d.cpp \
-    actors/grid.cpp
+    actors/grid.cpp \
+    utils/gradient.cpp
 
 HEADERS  += mainwindow.h \
     simulationview.h \

@@ -2,12 +2,17 @@
 #include "renderer/shader.h"
 #include "camera.h"
 
+#include <QColor>
+
 Grid::Grid(IActor *parent) :
     IActor(parent),
-    mShader(nullptr), mMaterial(nullptr), mContourMaterial(nullptr),
+    mProgram(nullptr), mProjMatrixLoc(0), mMVMatrixLoc(0),
+    mHeightLoc(0), mGradientLoc(0), mFactorLoc(0), mHeightBoundaryLoc(0),
     mIndexVBO(QOpenGLBuffer::IndexBuffer),
     mVertexData(nullptr), mIndexData(nullptr),
-    mGrid(nullptr), mXCount(0), mYCount(0)
+    mGrid(nullptr), mXCount(0), mYCount(0),
+    mHeightTex(QOpenGLTexture::Target2D), mGradientTex(QOpenGLTexture::Target1D),
+    mGradient(nullptr)
 {
 }
 
@@ -15,6 +20,35 @@ Grid::~Grid()
 {
     cleanup();
 }
+
+static const char *vertexShaderSourceCore =
+        "#version 150\n"
+        "in vec4 vertex;\n"
+        "in mediump vec3 normal;\n"
+        "in lowp vec2 uv;\n"
+        "out mediump vec3 N;\n"
+        "out lowp vec2 Tex;\n"
+        "uniform mat4 projMatrix;\n"
+        "uniform mat4 mvMatrix;\n"
+        "void main() {\n"
+        "   N = (mvMatrix*vec4(normal,0)).xyz;\n"
+        "   Tex = uv;\n"
+        "   gl_Position = projMatrix * mvMatrix * vertex;\n"
+        "}\n";
+
+static const char *fragmentShaderSourceCore =
+        "#version 150\n"
+        "in mediump vec3 N;\n"
+        "in lowp vec2 Tex;\n"
+        "out highp vec4 fragColor;\n"
+        "uniform vec2 heightBoundary;\n"
+        "uniform sampler2D heightMap;\n"
+        "uniform sampler1D gradientMap;\n"
+        "uniform float factor;\n"
+        "void main() {\n"
+        "   float t = (texture(heightMap, Tex).r-heightBoundary.x)/(heightBoundary.y - heightBoundary.x);\n"
+        "   fragColor = factor*texture(gradientMap, t);\n"
+        "}\n";
 
 void Grid::build(FloatDataGrid* grid, float spacing, float hSpaceing)
 {
@@ -123,23 +157,86 @@ void Grid::build(int xc, int yc, float spacing, float hSpaceing)
     mIndexVBO.allocate(mIndexData, mIndexCount * sizeof(GLuint));
 
     qDebug() << "Vertices " << mVertexCount << " Indices " << mIndexCount;
-    ShaderPreferences prefs;
-    prefs.HasAmbient = false;
-    prefs.Lights = 0;
-    mShader = new Shader;
-    mShader->build(prefs);
+    mProgram = new QOpenGLShaderProgram;
+    mProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSourceCore);
+    mProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShaderSourceCore);
+    mProgram->bindAttributeLocation("vertex", 0);
+    mProgram->bindAttributeLocation("normal", 1);
+    mProgram->bindAttributeLocation("uv", 2);
+    mProgram->link();
+
+    mProgram->bind();
+    mProjMatrixLoc = mProgram->uniformLocation("projMatrix");
+    mMVMatrixLoc = mProgram->uniformLocation("mvMatrix");
+    mHeightLoc = mProgram->uniformLocation("heightMap");
+    mGradientLoc = mProgram->uniformLocation("gradientMap");
+    mFactorLoc = mProgram->uniformLocation("factor");
+    mHeightBoundaryLoc = mProgram->uniformLocation("heightBoundary");
+
+    mProgram->enableAttributeArray("vertex");
+    mProgram->setAttributeBuffer("vertex", GL_FLOAT, 0, 3, 8*sizeof(GLfloat));
+
+    mProgram->enableAttributeArray("normal");
+    mProgram->setAttributeBuffer("normal", GL_FLOAT, 3*sizeof(GLfloat), 3, 8*sizeof(GLfloat));
+
+    mProgram->enableAttributeArray("uv");
+    mProgram->setAttributeBuffer("uv", GL_FLOAT, 6*sizeof(GLfloat), 2, 8*sizeof(GLfloat));
+
+    mProgram->setUniformValue(mHeightBoundaryLoc, mGrid->min(), mGrid->max());
+    mProgram->setUniformValue(mHeightLoc, (uint)0);
+    mProgram->setUniformValue(mGradientLoc, (uint)1);
+
+    mHeightTex.setFormat(QOpenGLTexture::R32F);
+    mHeightTex.setMinificationFilter(QOpenGLTexture::Linear);
+    mHeightTex.setMagnificationFilter(QOpenGLTexture::Linear);
+    mHeightTex.setWrapMode(QOpenGLTexture::ClampToEdge);
+    mHeightTex.setSize(mXCount, mYCount);
+    mHeightTex.allocateStorage();
+
+    if(mGrid)
+    {
+        mHeightTex.bind();
+        mHeightTex.setData(QOpenGLTexture::Red, QOpenGLTexture::Float32, mGrid->ptr());
+    }
+
+    const int GRADIENT_QUALITY = 256;
+    mGradientTex.setFormat(QOpenGLTexture::RGBA8_UNorm);
+    mGradientTex.setMinificationFilter(QOpenGLTexture::Linear);
+    mGradientTex.setMagnificationFilter(QOpenGLTexture::Linear);
+    mGradientTex.setWrapMode(QOpenGLTexture::ClampToEdge);
+    mGradientTex.setSize(GRADIENT_QUALITY);
+    mGradientTex.allocateStorage();
+
+    unsigned char gradientData[GRADIENT_QUALITY*4];
+    if(mGradient)
+    {
+        for(int i = 0; i < GRADIENT_QUALITY; ++i)
+        {
+            QVector4D col = mGradient->value(i/(float)63);
+            gradientData[i*4] = col.z();
+            gradientData[i*4+1] = col.y();
+            gradientData[i*4+2] = col.x();
+            gradientData[i*4+3] = col.w();
+        }
+
+        mGradientTex.bind();
+        mGradientTex.setData(QOpenGLTexture::BGRA, QOpenGLTexture::UInt8, gradientData);
+    }
 }
 
 void Grid::cleanup()
 {
+    mHeightTex.destroy();
+    mGradientTex.destroy();
+
     mIndexVBO.destroy();
     mVBO.destroy();
     mVAO.destroy();
 
-    if(mShader)
+    if(mProgram)
     {
-        delete mShader;
-        mShader = nullptr;
+        delete mProgram;
+        mProgram = nullptr;
     }
 
     if(mVertexData)
@@ -154,25 +251,33 @@ void Grid::cleanup()
         mIndexData = nullptr;
     }
 
+
     mGrid = nullptr;
     mXCount = 0;
     mYCount = 0;
 }
 
-void Grid::draw(Camera *camera, Environment* env)
+void Grid::draw(Camera *camera, Environment*)
 {
     Q_ASSERT(camera);
 
     mVAO.bind();
 
     QMatrix4x4 mat = camera->view() * matrix();
-    mShader->bind(mat, camera, mMaterial, env);
+    mProgram->bind();
+
+    mProgram->setUniformValue(mProjMatrixLoc, camera->projection());
+    mProgram->setUniformValue(mMVMatrixLoc, mat);
+    mProgram->setUniformValue(mFactorLoc, 1.0f);
+
+    mHeightTex.bind(0);
+    mGradientTex.bind(1);
 
     glDrawElements(GL_TRIANGLE_STRIP, mIndexCount, GL_UNSIGNED_INT, 0);
 
-    if(mContourMaterial)
+    if(true)
     {
-        mShader->bind(mat, camera, mContourMaterial, env);
+        mProgram->setUniformValue(mFactorLoc, 0.6f);
 
         glEnable(GL_POLYGON_OFFSET_FILL);
         glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -183,6 +288,8 @@ void Grid::draw(Camera *camera, Environment* env)
         glDisable(GL_POLYGON_OFFSET_FILL);
     }
 
-    mShader->release();
+    mHeightTex.release(0);
+    mGradientTex.release(1);
+    mProgram->release();
 }
 

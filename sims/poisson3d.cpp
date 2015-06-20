@@ -20,8 +20,7 @@ Poisson3D::Poisson3D() :
     mInteractor->setActor(&mRootActor);
 
     mGrid.setParent(&mRootActor);
-    mGrid.setMaterial(&mMaterial);
-    mGrid.setContourMaterial(&mContourMaterial);
+    mGrid.setGradient(&mGradient);
 
     for(uint x = 0; x < mDataGrid.width(); ++x)
     {

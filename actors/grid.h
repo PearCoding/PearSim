@@ -3,11 +3,13 @@
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLBuffer>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLTexture>
 
 #include "iactor.h"
 #include "datagrid.h"
+#include "utils/gradient.h"
 
-class Shader;
 class Material;
 class Grid : public IActor
 {
@@ -21,33 +23,28 @@ public:
 
     void draw(Camera *camera, Environment* env);
 
-    Material* material() const
+    inline Gradient<QVector4D>* gradient() const
     {
-        return mMaterial;
+        return mGradient;
     }
 
-    void setMaterial(Material* material)
+    inline void setGradient(Gradient<QVector4D>* gradient)
     {
-        mMaterial = material;
+        mGradient = gradient;
     }
 
-    Material* contourMaterial() const
-    {
-        return mContourMaterial;
-    }
-
-    void setContourMaterial(Material* material)
-    {
-        mContourMaterial = material;
-    }
 private:
     QOpenGLVertexArrayObject mVAO;
     QOpenGLBuffer mVBO;
     QOpenGLBuffer mIndexVBO;
+    QOpenGLShaderProgram *mProgram;
 
-    Shader* mShader;
-    Material* mMaterial;
-    Material* mContourMaterial;
+    int mProjMatrixLoc;
+    int mMVMatrixLoc;
+    int mHeightLoc;
+    int mGradientLoc;
+    int mFactorLoc;
+    int mHeightBoundaryLoc;
 
     int mVertexCount;
     int mIndexCount;
@@ -57,6 +54,11 @@ private:
     FloatDataGrid* mGrid;
     int mXCount;
     int mYCount;
+
+    QOpenGLTexture mHeightTex;
+    QOpenGLTexture mGradientTex;
+
+    Gradient<QVector4D>* mGradient;
 };
 
 #endif // GRID_H
