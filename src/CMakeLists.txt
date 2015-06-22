@@ -107,7 +107,7 @@ SET(PS_WIDGETS_Hdr
   ${PS_Root}/widgets/simulationview.h)
 SOURCE_GROUP("Header Files\\Widgets" FILES ${PS_WIDGETS_Hdr})
 SET(PS_Hdr
-  ${PS_MAIN_Hdr} ${PS_ACTORS_Hdr} ${PS_Data_Hdr} ${PS_INTERACTORS_Hdr}
+  ${PS_MAIN_Hdr} ${PS_ACTORS_Hdr} ${PS_DATA_Hdr} ${PS_INTERACTORS_Hdr}
   ${PS_LOADER_Hdr} ${PS_PROPERTIES_Hdr} ${PS_RENDERER_Hdr}
   ${PS_SIMS_Hdr} ${PS_UTILS_Hdr} ${PS_WIDGETS_Hdr}
 )

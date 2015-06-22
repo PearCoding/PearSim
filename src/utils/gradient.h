@@ -1,5 +1,4 @@
-#ifndef GRADIENT_H
-#define GRADIENT_H
+#pragma once
 
 #include <QVector>
 #include <QVector4D>
@@ -8,111 +7,102 @@ template <typename T>
 class Gradient
 {
 public:
-    virtual T value(float t) const = 0;
+	virtual T value(float t) const = 0;
 };
 
 template <typename T>
 class LinearGradient : public Gradient<T>
 {
 public:
-    inline T startValue() const
-    {
-        return mStart;
-    }
+	inline T startValue() const
+	{
+		return mStart;
+	}
 
-    inline void setStartValue(T t)
-    {
-        mStart = t;
-    }
+	inline void setStartValue(T t)
+	{
+		mStart = t;
+	}
 
-    inline T endValue() const
-    {
-        return mEnd;
-    }
+	inline T endValue() const
+	{
+		return mEnd;
+	}
 
-    inline void setEndValue(T t)
-    {
-        mEnd = t;
-    }
+	inline void setEndValue(T t)
+	{
+		mEnd = t;
+	}
 
-    inline T value(float t) const
-    {
-        return t*mEnd + (1-t)*mStart;
-    }
+	inline T value(float t) const
+	{
+		return t*mEnd + (1-t)*mStart;
+	}
 
 private:
-    T mStart;
-    T mEnd;
+	T mStart;
+	T mEnd;
 };
 
 template <typename T>
 class MultiLinearGradient : public Gradient<T>
 {
 private:
-    struct Point
-    {
-        T Value;
-        float Pos;
-    };
-    inline Point lowBorderValue(float t) const
-    {
-        Point point;
-        point.Pos = std::numeric_limits<float>::lowest();
-        foreach(Point p, mPoints)
-        {
-           if(p.Pos <= t && point.Pos < p.Pos)
-           {
-               point = p;
-           }
-        }
+	struct Point
+	{
+		T Value;
+		float Pos;
+	};
 
-        return point;
-    }
+	inline static bool sort_f(const Point& p1, const Point& p2)
+	{
+		return p1.Pos < p2.Pos;
+	}
 
-    inline Point highBorderValue(float t) const
-    {
-        Point point;
-        point.Pos = std::numeric_limits<float>::max();
-        foreach(Point p, mPoints)
-        {
-           if(p.Pos > t && point.Pos > p.Pos)
-           {
-               point = p;
-           }
-        }
+	inline std::pair<Point, Point> borderPoints(float t) const
+	{
+		Point last = mPoints.first();
+		foreach(Point p, mPoints)
+		{
+			if (p.Pos > t)
+			{
+				return std::pair<Point, Point>(last, p);
+			}
 
-        return point;
-    }
+			last = p;
+		}
+
+		return std::pair<Point, Point>(last, mPoints.last());
+	}
 
 public:
-    inline T value(float t) const
-    {
-        Q_ASSERT(mPoints.size() >= 2);
+	inline T value(float t) const
+	{
+		Q_ASSERT(mPoints.size() >= 2);
 
-        const Point start = lowBorderValue(t);
-        const Point end = highBorderValue(t);
+		const std::pair<Point, Point> border = borderPoints(t);
 
-        const float nt = (t-start.Pos)/(end.Pos-start.Pos);
+		const float nt = (border.first.Pos == border.second.Pos) ? 1 : (t - border.first.Pos) / (border.second.Pos - border.first.Pos);
 
-        return nt*end.Value + (1-nt)*start.Value;
-    }
+		return nt*border.second.Value + (1-nt)*border.first.Value;
+	}
 
-    inline void add(float t, T val)
-    {
-        Point p;
-        p.Pos = t;
-        p.Value = val;
-        mPoints.append(p);
-    }
+	inline void add(float t, T val)
+	{
+		Point p;
+		p.Pos = t;
+		p.Value = val;
+		mPoints.append(p);
+
+		std::sort(mPoints.begin(), mPoints.end(), sort_f);
+	}
 
 private:
-    QVector<Point> mPoints;
+	QVector<Point> mPoints;
 };
 
 class StandardGradient : public MultiLinearGradient<QVector4D>
 {
 public:
-    StandardGradient();
+	StandardGradient();
 };
-
-#endif // GRADIENT_H
