@@ -1,5 +1,4 @@
-#ifndef SIMULATIONVIEW_H
-#define SIMULATIONVIEW_H
+#pragma once
 
 #include <QOpenGLWidget>
 #include <QOpenGLDebugLogger>
@@ -39,5 +38,3 @@ private:
     ISimulation* mSimulation;
     QOpenGLDebugLogger* mLogger;
 };
-
-#endif // SIMULATIONVIEW_H

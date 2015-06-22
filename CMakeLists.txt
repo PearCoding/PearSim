@@ -42,11 +42,12 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5OpenGL REQUIRED)
 
 find_package(OpenGL REQUIRED)
+find_package(OpenCL)
 
 MESSAGE(STATUS "Using Qt: ${Qt5Widgets_VERSION_STRING}")
 
 #DEFINITIONS AND FLAGS
-include_directories(${PS_Root}/lib ${Qt5Widgets_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS})
+include_directories(${PS_Root}/lib ${Qt5Widgets_INCLUDE_DIRS} ${Qt5OpenGL_INCLUDE_DIRS} ${OpenCL_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/src/lib)
 link_directories(${CMAKE_CURRENT_BINARY_DIR})
 add_definitions(${Qt5Widgets_DEFINITIONS})

@@ -126,5 +126,6 @@ add_executable(${PS_TARGET} ${PS_Src} ${PS_Hdr}
 target_link_libraries(${PS_TARGET} Qt5::Widgets)
 target_link_libraries(${PS_TARGET} Qt5::OpenGL)
 target_link_libraries(${PS_TARGET} ${OPENGL_LIBRARIES})
+target_link_libraries(${PS_TARGET} ${OpenCL_LIBRARIES})
 set_target_properties(${PS_TARGET} PROPERTIES VERSION ${PS_Version})
 set_target_properties(${PS_TARGET} PROPERTIES COMPILE_DEFINITIONS "${DEFS}" COMPILE_DEFINITIONS_DEBUG "${DEFS_DEBUG}")

@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     format.setRenderableType(QSurfaceFormat::OpenGL);
     format.setProfile(QSurfaceFormat::CoreProfile);
 
-#ifdef QT_DEBUG
+#ifdef PS_DEBUG
     format.setOption(QSurfaceFormat::DebugContext);
 #endif
 
@@ -27,5 +27,11 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    return a.exec();
+	int res = a.exec();
+
+#if defined(PS_DEBUG) && defined(Q_OS_WIN)
+	system("PAUSE");
+#endif
+
+    return res;
 }
