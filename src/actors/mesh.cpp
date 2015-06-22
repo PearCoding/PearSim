@@ -1,5 +1,5 @@
 #include "mesh.h"
-#include "camera.h"
+#include "renderer/camera.h"
 #include "renderer/shader.h"
 
 Mesh::Mesh(IActor *parent) :

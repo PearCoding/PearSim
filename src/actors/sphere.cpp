@@ -1,5 +1,6 @@
 #include "sphere.h"
-#include "camera.h"
+
+#include "renderer/camera.h"
 #include "renderer/shader.h"
 
 #include <math.h>

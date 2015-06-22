@@ -2,7 +2,7 @@
 #define BLOCKSIMULATION_H
 
 #include "isimulation.h"
-#include "camera.h"
+#include "renderer/camera.h"
 #include "actors/gridbox.h"
 
 class CameraInteractor;

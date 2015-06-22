@@ -1,12 +1,13 @@
-#include "mainwindow.h"
+#include "config.h"
+#include "widgets/mainwindow.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    a.setApplicationName("PearSimulation");
-    a.setApplicationVersion("0.1");
+    a.setApplicationName(PS_APP_TITLE);
+    a.setApplicationVersion(PS_VERSION_STRING);
     a.setOrganizationName("PearCoding");
 
     QSurfaceFormat format;

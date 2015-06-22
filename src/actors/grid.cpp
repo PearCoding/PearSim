@@ -1,6 +1,6 @@
 #include "grid.h"
 #include "renderer/shader.h"
-#include "camera.h"
+#include "renderer/camera.h"
 
 #include <QColor>
 

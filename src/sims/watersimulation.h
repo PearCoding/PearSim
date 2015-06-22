@@ -2,7 +2,7 @@
 #define WATERSIMULATION_H
 
 #include "isimulation.h"
-#include "camera.h"
+#include "renderer/camera.h"
 
 #include "actors/emptyactor.h"
 #include "actors/mesh.h"

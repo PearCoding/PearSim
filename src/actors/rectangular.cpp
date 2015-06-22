@@ -1,6 +1,6 @@
 #include "rectangular.h"
-#include "camera.h"
 
+#include "renderer/camera.h"
 #include "renderer/shader.h"
 
 Rectangular::Rectangular(IActor *parent):

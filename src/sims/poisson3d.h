@@ -1,31 +1,28 @@
-#ifndef SPRINGSIMULATION_H
-#define SPRINGSIMULATION_H
+#ifndef POISSON3D_H
+#define POISSON3D_H
 
 #include "isimulation.h"
-#include "camera.h"
+#include "renderer/camera.h"
 
-#include "actors/rectangular.h"
 #include "actors/emptyactor.h"
-#include "actors/sphere.h"
+#include "actors/grid.h"
 
 #include "renderer/material.h"
 #include "renderer/environment.h"
 
 class ActorInteractor;
-class SpringSimulation : public ISimulation
+class Poisson3D : public ISimulation
 {
 public:
-    SpringSimulation();
-    ~SpringSimulation();
-
-    QString name() const
+    Poisson3D();
+    ~Poisson3D();QString name() const
     {
-        return "Spring-Mass";
+        return "Poisson 3D";
     }
 
     int flags() const
     {
-        return SF_Step;
+        return SF_None;
     }
 
     IInteractor* interactor();
@@ -39,15 +36,16 @@ private:
     Camera mCamera;
 
     EmptyActor mRootActor;
-    Rectangular mStartBound;
-    Rectangular mEndBound;
-    Sphere mFirstSphere;
-    Sphere mSecondSphere;
+    Grid mGrid;
 
-    Material mSphereMaterial;
+    FloatDataGrid mDataGrid;
+    StandardGradient mGradient;
+
+    Material mMaterial;
+    Material mContourMaterial;
     Environment mEnvironment;
 
     ActorInteractor* mInteractor;
 };
 
-#endif // SPRINGSIMULATION_H
+#endif // POISSON3D_H

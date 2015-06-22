@@ -1,5 +1,5 @@
 #include "gridbox.h"
-#include "camera.h"
+#include "renderer/camera.h"
 
 #include <QOpenGLFunctions>
 

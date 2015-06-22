@@ -1,5 +1,6 @@
 #include "camerainteractor.h"
-#include "camera.h"
+
+#include "renderer/camera.h"
 
 #include <QKeyEvent>
 

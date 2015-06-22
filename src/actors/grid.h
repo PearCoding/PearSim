@@ -7,7 +7,7 @@
 #include <QOpenGLTexture>
 
 #include "iactor.h"
-#include "datagrid.h"
+#include "data/datagrid.h"
 #include "utils/gradient.h"
 
 class Material;
