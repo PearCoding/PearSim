@@ -104,5 +104,12 @@ private:
 class StandardGradient : public MultiLinearGradient<QVector4D>
 {
 public:
-	StandardGradient();
+	enum Type
+	{
+		T_HSV,
+		T_Hot,
+		T_Cool,
+		T_Gray
+	};
+	StandardGradient(Type type = T_HSV);
 };
