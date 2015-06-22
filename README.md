@@ -1,4 +1,4 @@
-# PearSimulation
+# PearSim
 Simulation and benchmarking framework for 2D/3D, numerical, ODE, PDE, fluids and other experiments.
 
 In summary, a general software toolkit for my own "research" work.
