@@ -128,13 +128,7 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="PropertyView" name="propertyView">
-       <column>
-        <property name="text">
-         <string notr="true">1</string>
-        </property>
-       </column>
-      </widget>
+      <widget class="PropertyView" name="propertyView"/>
      </item>
     </layout>
    </widget>

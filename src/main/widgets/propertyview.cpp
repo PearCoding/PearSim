@@ -12,6 +12,7 @@ QTreeWidget(parent),
 mProperties(nullptr)
 {
 	setColumnCount(2);
+	setAlternatingRowColors(true);
 
 	QStringList headerList;
 	headerList << tr("Property") << tr("Value");
@@ -19,10 +20,16 @@ mProperties(nullptr)
 	setHeaderLabels(headerList);
 
 	QPalette p(palette());
-	p.setColor(QPalette::Base, QColor(255,255,200));
+	p.setColor(QPalette::AlternateBase, QColor(255, 255, 200));
+	p.setColor(QPalette::Base, QColor(255, 255, 160));
 	setPalette(p);
 
-	addTopLevelItem(new QTreeWidgetItem(QStringList{ "Test1", "1" }));
+	QTreeWidgetItem* item = new QTreeWidgetItem(QStringList{ "Test1", "1" });
+	QTreeWidgetItem* child = new QTreeWidgetItem(QStringList{ "Test1_1", "1.1" });
+	item->addChild(child);
+	child->addChild(new QTreeWidgetItem(QStringList{ "Test1.1.1", "1.1.1" }));
+
+	addTopLevelItem(item);
 	addTopLevelItem(new QTreeWidgetItem(QStringList{ "Test2", "2" }));
 	addTopLevelItem(new QTreeWidgetItem(QStringList{ "Test3", "3" }));
 	addTopLevelItem(new QTreeWidgetItem(QStringList{ "Test4", "4" }));
@@ -66,14 +73,22 @@ void PropertyView::reset()
 
 void PropertyView::drawRow(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-	QTreeWidget::drawRow(painter, option, index);
-
 	QTreeWidgetItem* item = itemFromIndex(index);
 
-	QColor color(QApplication::style()->styleHint(QStyle::SH_Table_GridLineColor, &option));
+	QTreeWidget::drawRow(painter, option, index);
+
 	painter->save();
-	painter->setPen(QPen(color));
+	painter->setPen(QPen(Qt::gray));
 	painter->drawLine(option.rect.x(), option.rect.bottom(), option.rect.right(), option.rect.bottom());
-	painter->drawLine(option.rect.x() + indentation(), option.rect.top(), option.rect.x() + indentation(), option.rect.bottom());
+	painter->restore();
+}
+
+void PropertyView::drawBranches(QPainter* painter, const QRect & rect, const QModelIndex & index) const
+{
+	QTreeWidget::drawBranches(painter, rect, index);
+	
+	painter->save();
+	painter->setPen(QPen(Qt::gray));
+	painter->drawLine(rect.right(), rect.top(), rect.right(), rect.bottom());
 	painter->restore();
 }
