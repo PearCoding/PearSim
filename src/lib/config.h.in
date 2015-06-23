@@ -1,0 +1,35 @@
+#pragma once
+
+#define PS_STRINGIFY(str) 	#str
+#define PS_DOUBLEQUOTE(str) PS_STRINGIFY(str)
+
+#define PS_NAME_STRING		PS_DOUBLEQUOTE(${CMAKE_PROJECT_NAME})
+#define PS_VENDOR_STRING	PS_DOUBLEQUOTE(${VENDOR})
+
+#define PS_VERSION_MAJOR	${VERSION_MAJOR}
+#define PS_VERSION_MINOR	${VERSION_MINOR}
+#define PS_VERSION_STRING 	PS_DOUBLEQUOTE(${VERSION_MAJOR}) "." PS_DOUBLEQUOTE(${VERSION_MINOR})
+#define PS_VERSION 			${VERSION_HEX}
+#define PS_VERSION_CHECK(major, minor) (((major) << 8) | (minor))
+
+#define PS_APP_TITLE		"PearSim"
+
+#define PS_DT_FORMAT		"hh:mm dd.MM.yyyy"
+#define PS_DT_FORMAT_DIR	"hh:mm_dd.MM.yyyy"
+
+#include <qglobal.h>
+
+#if !defined(PS_LIB_STATIC)
+# define PS_EXPORT Q_DECL_EXPORT
+# define PS_IMPORT Q_DECL_IMPORT
+#else
+# define PS_EXPORT
+# define PS_IMPORT
+#endif
+
+#if defined(PS_LIB_BUILD)
+# define PS_LIB PS_EXPORT
+#else
+# define PS_LIB PS_IMPORT
+#endif
+#define PS_LIB_INLINE

@@ -69,4 +69,6 @@ ENDIF()
 
 SET(DEFS_DEBUG "${DEFS_DEBUG};PS_DEBUG")
 
-add_subdirectory(${PS_Root})
+add_subdirectory(${PS_Root}/lib)
+add_subdirectory(${PS_Root}/main)
+add_subdirectory(${PS_Root}/plugins)
