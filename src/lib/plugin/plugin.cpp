@@ -9,6 +9,11 @@ mLibrary(path, version), mInitFunction(nullptr), mSimulation(nullptr)
 
 Plugin::~Plugin()
 {
+	if (mSimulation)
+	{
+		delete mSimulation;
+	}
+
 	mLibrary.unload();
 }
 
@@ -31,7 +36,6 @@ bool Plugin::init()
 	mSimulation = mInitFunction();
 	if (mSimulation != nullptr)
 	{
-		qDebug() << "Successful init plugin";
 		return true;
 	}
 	else

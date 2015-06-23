@@ -1,14 +1,11 @@
 #pragma once
 
-#include <QObject>
-
 #include "plugin.h"
 
-class PS_LIB PluginManager : public QObject
+class PS_LIB PluginManager
 {
-	Q_OBJECT
 public:
-	explicit PluginManager(QObject *parent = 0);
+	explicit PluginManager();
 	~PluginManager();
 
 	static inline PluginManager* getInstance()
@@ -43,7 +40,7 @@ public:
 			{
 				if(!plugin->init())
 				{
-					qCritical("An error happened while initializing the algorithm plugin");
+					qCritical("An error happened while initializing the plugin");
 				}
 			}
 		}
@@ -70,10 +67,6 @@ public:
 		}
 		return 0;
 	}
-
-signals:
-
-public slots:
 
 private:
 	static PluginManager* sInstance;

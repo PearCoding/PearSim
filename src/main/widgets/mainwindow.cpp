@@ -6,17 +6,24 @@
 #include <QFileDialog>
 #include <QStandardPaths>
 #include <QSettings>
+#include <QMessageBox>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
 	mSimulation(nullptr)
 {
+	setWindowTitle(PS_APP_TITLE);
 	ui->setupUi(this);
 
 	ui->menuDockwidgets->addAction(ui->logDW->toggleViewAction());
 	ui->menuDockwidgets->addAction(ui->propertiesDW->toggleViewAction());
 	ui->menuToolbars->addAction(ui->mainToolBar->toggleViewAction());
+
+	connect(ui->actionHomepage, SIGNAL(triggered()), this, SLOT(homepage_sl()));
+	connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about_sl()));
+	connect(ui->actionAbout_Qt, SIGNAL(triggered()), QApplication::instance(), SLOT(aboutQt()));
 
 	mGLLogger = new QOpenGLDebugLogger(this);
 
@@ -26,7 +33,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	ui->simulationView->setLogger(mGLLogger);
 
-	//openSimulation( new Poisson3D );
+	QString plName = "ps_poisson3d_plugin";
+#ifdef PS_DEBUG
+	plName += "_d";
+#endif
+	Plugin* plugin = mPluginManager.loadPlugin(plName);
+
+	if (plugin)
+	{
+		openSimulation(plugin->sim());
+	}
 
 	loadSettings();
 }
@@ -38,7 +54,6 @@ MainWindow::~MainWindow()
 	{
 		mSimulation->cleanResources();
 		ui->simulationView->setSimulation(nullptr);
-		delete mSimulation;
 	}
 
 	delete ui;
@@ -53,11 +68,11 @@ void MainWindow::openSimulation(ISimulation* sim)
 {
 	if (sim)
 	{
-		this->setWindowTitle("PearSimulation | " + sim->name());
+		setWindowTitle(PS_APP_TITLE " | " + sim->name());
 	}
 	else
 	{
-		this->setWindowTitle("PearSimulation");
+		setWindowTitle(PS_APP_TITLE);
 	}
 
 	mSimulation = sim;
@@ -146,4 +161,18 @@ void MainWindow::loadSettings()
 	restoreGeometry(settings.value("geometry").toByteArray());
 	restoreState(settings.value("state").toByteArray());
 	settings.endGroup();
+}
+
+void MainWindow::homepage_sl()
+{
+	QDesktopServices::openUrl(QUrl("http://pearcoding.eu/"));
+}
+
+void MainWindow::about_sl()
+{
+	QMessageBox::about(this, tr("About PearSim"),
+		tr("<h3>About PearSim</h3>"
+		"<p>Version: " PS_VERSION_STRING "</p>"
+		"<p>Simulation and benchmarking framework for 2D/3D, numerical, ODE, PDE, fluids and other experiments.</p>"
+		"<p>Website: <a href='http://pearcoding.eu/'>pearcoding.eu</a></p>"));
 }

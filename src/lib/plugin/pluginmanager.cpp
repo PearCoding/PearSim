@@ -3,8 +3,7 @@
 
 PluginManager* PluginManager::sInstance = 0;
 
-PluginManager::PluginManager(QObject *parent) :
-	QObject(parent)
+PluginManager::PluginManager()
 {
 	if(sInstance)
 	{
