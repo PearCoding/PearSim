@@ -77,6 +77,15 @@ void MainWindow::openSimulation(ISimulation* sim)
 
 	mSimulation = sim;
 	ui->simulationView->setSimulation(mSimulation);
+
+	if (sim)
+	{
+		ui->propertyView->setPropertyTable(mSimulation->properties());
+	}
+	else
+	{
+		ui->propertyView->reset();
+	}
 }
 
 void MainWindow::makeScreenshot()

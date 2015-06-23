@@ -14,12 +14,24 @@ PropertyTable::~PropertyTable()
 
 void PropertyTable::add(IProperty* property)
 {
-	if (mProperties.contains(property))
+	if (mAllProperties.contains(property))
 	{
 		return;
 	}
 
-	mProperties.append(property);
+	mTopProperties.append(property);
+
+	rec_add(property);
+}
+
+void PropertyTable::rec_add(IProperty* property)
+{
+	if (mAllProperties.contains(property))
+	{
+		return;
+	}
+
+	mAllProperties.append(property);
 
 	connect(property, SIGNAL(propertyDestroyed(IProperty*)), this, SLOT(propertyWasDestroyed(IProperty*)));
 	connect(property, SIGNAL(propertyChanged()), &mPropertyChangedMapper, SLOT(map()));
@@ -28,18 +40,19 @@ void PropertyTable::add(IProperty* property)
 
 	foreach(IProperty* child, property->childs())
 	{
-		add(child);
+		rec_add(child);
 	}
 }
 
 void PropertyTable::remove(IProperty* property)
 {
-	if (!mProperties.contains(property))
+	if (!mAllProperties.contains(property))
 	{
 		return;
 	}
 
-	mProperties.removeOne(property);
+	mTopProperties.removeOne(property);
+	mAllProperties.removeOne(property);
 
 	disconnect(property, SIGNAL(propertyDestroyed(IProperty*)), this, SLOT(propertyWasDestroyed(IProperty*)));
 	disconnect(property, SIGNAL(propertyChanged()), &mPropertyChangedMapper, SLOT(map()));
@@ -52,9 +65,14 @@ void PropertyTable::remove(IProperty* property)
 	}
 }
 
-QList<IProperty*> PropertyTable::properties() const
+QList<IProperty*> PropertyTable::allProperties() const
 {
-	return mProperties;
+	return mAllProperties;
+}
+
+QList<IProperty*> PropertyTable::topProperties() const
+{
+	return mTopProperties;
 }
 
 void PropertyTable::propertyWasDestroyed(IProperty* prop)

@@ -15,7 +15,9 @@ public:
 
 	void add(IProperty* property);
 	void remove(IProperty* property);
-	QList<IProperty*> properties() const;
+
+	QList<IProperty*> topProperties() const;
+	QList<IProperty*> allProperties() const;
 
 signals:
 	void propertyChanged(IProperty* prop);
@@ -29,7 +31,10 @@ private slots:
 	void valueWasChanged(QObject* obj);
 
 private:
-	QList<IProperty*> mProperties;
+	void rec_add(IProperty* property);
+
+	QList<IProperty*> mAllProperties;
+	QList<IProperty*> mTopProperties;
 	QSignalMapper mPropertyChangedMapper;
 	QSignalMapper mPropertyStructureChangedMapper;
 	QSignalMapper mValueChangedMapper;
