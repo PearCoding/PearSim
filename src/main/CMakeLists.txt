@@ -9,6 +9,7 @@ SET(PSM_MAIN_Src
 SOURCE_GROUP("Source Files" FILES ${PSM_MAIN_Src})
 SET(PSM_WIDGETS_Src
   ${PSM_Root}/widgets/mainwindow.cpp
+  ${PSM_Root}/widgets/propertyview.cpp
   ${PSM_Root}/widgets/simulationview.cpp)
 SOURCE_GROUP("Source Files\\Widgets" FILES ${PSM_WIDGETS_Src})
 SET(PSM_Src
@@ -19,6 +20,7 @@ SET(PSM_MAIN_Hdr)
 SOURCE_GROUP("Header Files" FILES ${PSM_MAIN_Hdr})
 SET(PSM_WIDGETS_Hdr
   ${PSM_Root}/widgets/mainwindow.h
+  ${PSM_Root}/widgets/propertyview.h
   ${PSM_Root}/widgets/simulationview.h)
 SOURCE_GROUP("Header Files\\Widgets" FILES ${PSM_WIDGETS_Hdr})
 SET(PSM_Hdr

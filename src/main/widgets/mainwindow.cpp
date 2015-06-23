@@ -174,5 +174,6 @@ void MainWindow::about_sl()
 		tr("<h3>About PearSim</h3>"
 		"<p>Version: " PS_VERSION_STRING "</p>"
 		"<p>Simulation and benchmarking framework for 2D/3D, numerical, ODE, PDE, fluids and other experiments.</p>"
-		"<p>Website: <a href='http://pearcoding.eu/'>pearcoding.eu</a></p>"));
+		"<p>Website: <a href='http://pearcoding.eu/'>pearcoding.eu</a><br />"
+		"GitHub: <a href='https://github.com/PearCoding/PearSim'>PearSim</a></p>"));
 }

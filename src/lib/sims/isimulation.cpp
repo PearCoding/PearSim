@@ -16,7 +16,7 @@ IInteractor* ISimulation::interactor()
     return nullptr;
 }
 
-IPropertyTable* ISimulation::properties()
+PropertyTable* ISimulation::properties()
 {
     return nullptr;
 }
