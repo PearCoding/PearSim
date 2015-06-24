@@ -29,6 +29,11 @@ public:
 
 	virtual bool init();
 
+	inline bool isValid() const
+	{
+		return mValid;
+	}
+
 	inline ISimulation* sim() const
 	{
 		return mSimulation;
@@ -41,6 +46,7 @@ protected:
 	}
 
 private:
+	bool mValid;
 	QLibrary mLibrary;
 	PS_INITPLUGIN_FUNCTION mInitFunction;
 	ISimulation* mSimulation;

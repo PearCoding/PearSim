@@ -3,7 +3,8 @@
 #include <QDebug>
 
 Plugin::Plugin(const QString& path, const QString& version) :
-mLibrary(path, version), mInitFunction(nullptr), mSimulation(nullptr)
+mLibrary(path, version), mInitFunction(nullptr), mSimulation(nullptr),
+mValid(false)
 {
 }
 
@@ -36,6 +37,7 @@ bool Plugin::init()
 	mSimulation = mInitFunction();
 	if (mSimulation != nullptr)
 	{
+		mValid = true;
 		return true;
 	}
 	else

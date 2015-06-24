@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QVariant>
 #include <QString>
-#include <QMap>
+#include <QList>
+#include <QObject>
 #include "config.h"
 
 class PS_LIB IProperty : public QObject
@@ -40,6 +40,8 @@ public:
 	// Make the modified value as unmodified
 	// Same as setModified(false);
 	virtual void save() = 0;
+
+	virtual QWidget* editorWidget(QWidget* parent) = 0;
 
 signals:
 	void propertyDestroyed(IProperty* prop);

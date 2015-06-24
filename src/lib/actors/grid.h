@@ -13,49 +13,59 @@ class Material;
 class PS_LIB Grid : public IActor
 {
 public:
-    Grid(IActor* parent = nullptr);
-    ~Grid();
+	Grid(IActor* parent = nullptr);
+	~Grid();
 
-    void build(FloatDataGrid* grid, float spacing = 1.0f, float hSpaceing = 1.0f);
-    void build(int xc, int yc, float spacing, float hSpaceing);
-    void cleanup();
+	void build(FloatDataGrid* grid, float spacing = 1.0f, float hSpaceing = 1.0f);
+	void build(int xc, int yc, float spacing, float hSpaceing);
+	void cleanup();
 
-    void draw(Camera *camera, Environment* env);
+	void draw(Camera *camera, Environment* env);
 
-    inline Gradient<QVector4D>* gradient() const
-    {
-        return mGradient;
-    }
+	inline Gradient<QVector4D>* gradient() const
+	{
+		return mGradient;
+	}
 
-    inline void setGradient(Gradient<QVector4D>* gradient)
-    {
-        mGradient = gradient;
-    }
+	inline void setGradient(Gradient<QVector4D>* gradient)
+	{
+		mGradient = gradient;
+	}
 
+	inline float gridFactor() const
+	{
+		return mGridFactor;
+	}
+
+	inline void setGridFactor(float f)
+	{
+		mGridFactor = f;
+	}
 private:
-    QOpenGLVertexArrayObject mVAO;
-    QOpenGLBuffer mVBO;
-    QOpenGLBuffer mIndexVBO;
-    QOpenGLShaderProgram *mProgram;
+	QOpenGLVertexArrayObject mVAO;
+	QOpenGLBuffer mVBO;
+	QOpenGLBuffer mIndexVBO;
+	QOpenGLShaderProgram *mProgram;
 
-    int mProjMatrixLoc;
-    int mMVMatrixLoc;
-    int mHeightLoc;
-    int mGradientLoc;
-    int mFactorLoc;
-    int mHeightBoundaryLoc;
+	int mProjMatrixLoc;
+	int mMVMatrixLoc;
+	int mHeightLoc;
+	int mGradientLoc;
+	int mFactorLoc;
+	int mHeightBoundaryLoc;
 
-    int mVertexCount;
-    int mIndexCount;
-    GLfloat* mVertexData;
-    GLuint* mIndexData;
+	int mVertexCount;
+	int mIndexCount;
+	GLfloat* mVertexData;
+	GLuint* mIndexData;
 
-    FloatDataGrid* mGrid;
-    int mXCount;
-    int mYCount;
+	FloatDataGrid* mGrid;
+	int mXCount;
+	int mYCount;
 
-    QOpenGLTexture mHeightTex;
-    QOpenGLTexture mGradientTex;
+	QOpenGLTexture mHeightTex;
+	QOpenGLTexture mGradientTex;
 
-    Gradient<QVector4D>* mGradient;
+	float mGridFactor;
+	Gradient<QVector4D>* mGradient;
 };

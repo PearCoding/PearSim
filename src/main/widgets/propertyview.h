@@ -2,6 +2,7 @@
 
 #include <QTreeWidget>
 
+class IProperty;
 class PropertyTable;
 class PropertyView : public QTreeWidget
 {
@@ -21,5 +22,9 @@ protected:
 	void drawBranches(QPainter* painter, const QRect & rect, const QModelIndex & index) const;
 
 private:
+	void addChildItems(QTreeWidgetItem* parent, IProperty*);
+	QTreeWidgetItem* createItem(IProperty* property);
+
 	PropertyTable* mProperties;
+	QMap<QTreeWidgetItem*, IProperty*> mMapper;
 };

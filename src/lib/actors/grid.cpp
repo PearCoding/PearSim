@@ -12,7 +12,7 @@ Grid::Grid(IActor *parent) :
 	mVertexData(nullptr), mIndexData(nullptr),
 	mGrid(nullptr), mXCount(0), mYCount(0),
 	mHeightTex(QOpenGLTexture::Target2D), mGradientTex(QOpenGLTexture::Target1D),
-	mGradient(nullptr)
+	mGridFactor(0.4f), mGradient(nullptr)
 {
 }
 
@@ -275,9 +275,9 @@ void Grid::draw(Camera *camera, Environment*)
 
 	glDrawElements(GL_TRIANGLE_STRIP, mIndexCount, GL_UNSIGNED_INT, 0);
 
-	if(true)
+	if(mGridFactor != 0)
 	{
-		mProgram->setUniformValue(mFactorLoc, 0.6f);
+		mProgram->setUniformValue(mFactorLoc, 1-mGridFactor);
 
 		glEnable(GL_POLYGON_OFFSET_FILL);
 		glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );

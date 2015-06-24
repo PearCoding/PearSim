@@ -13,26 +13,17 @@ mProperties(nullptr)
 {
 	setColumnCount(2);
 	setAlternatingRowColors(true);
+	setRootIsDecorated(true);
+	setSelectionMode(QAbstractItemView::NoSelection);
 
 	QStringList headerList;
 	headerList << tr("Property") << tr("Value");
-		qDebug() << headerList;
 	setHeaderLabels(headerList);
 
 	QPalette p(palette());
 	p.setColor(QPalette::AlternateBase, QColor(255, 255, 200));
 	p.setColor(QPalette::Base, QColor(255, 255, 160));
 	setPalette(p);
-
-	QTreeWidgetItem* item = new QTreeWidgetItem(QStringList{ "Test1", "1" });
-	QTreeWidgetItem* child = new QTreeWidgetItem(QStringList{ "Test1_1", "1.1" });
-	item->addChild(child);
-	child->addChild(new QTreeWidgetItem(QStringList{ "Test1.1.1", "1.1.1" }));
-
-	addTopLevelItem(item);
-	addTopLevelItem(new QTreeWidgetItem(QStringList{ "Test2", "2" }));
-	addTopLevelItem(new QTreeWidgetItem(QStringList{ "Test3", "3" }));
-	addTopLevelItem(new QTreeWidgetItem(QStringList{ "Test4", "4" }));
 	
 	connect(header(), SIGNAL(sectionDoubleClicked(int)), this, SLOT(resizeColumnToContents(int)));
 	header()->setStretchLastSection(true);
@@ -55,9 +46,53 @@ void PropertyView::setPropertyTable(PropertyTable* table)
 	{
 		foreach(IProperty* prop, mProperties->topProperties())
 		{
+			QTreeWidgetItem* item = createItem(prop);
+			mMapper.insert(item, prop);
 
+			addChildItems(item, prop);
 		}
 	}
+}
+
+void PropertyView::addChildItems(QTreeWidgetItem* parent, IProperty* property)
+{
+	foreach(IProperty* prop, property->childs())
+	{
+		QTreeWidgetItem* item = createItem(prop);
+		parent->addChild(item);
+		mMapper.insert(item, prop);
+
+		addChildItems(item, prop);
+	}
+}
+
+QTreeWidgetItem* PropertyView::createItem(IProperty* property)
+{
+	QTreeWidgetItem* item = new QTreeWidgetItem(this);
+
+	item->setDisabled(!property->isEnabled());
+	item->setText(0, property->propertyName());
+
+	item->setStatusTip(0, property->statusTip());
+	item->setStatusTip(1, property->statusTip());
+
+	item->setToolTip(0, property->toolTip());
+	item->setToolTip(1, property->toolTip());
+
+	item->setWhatsThis(0, property->whatsThis());
+	item->setWhatsThis(1, property->whatsThis());
+	
+	QWidget* editor = property->editorWidget(this);
+	if (editor)
+	{
+		setItemWidget(item, 1, editor);
+	}
+	else
+	{
+		item->setText(1, property->valueText());
+	}
+
+	return item;
 }
 
 PropertyTable* PropertyView::propertyTable() const

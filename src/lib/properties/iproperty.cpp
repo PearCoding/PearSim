@@ -78,13 +78,13 @@ void IProperty::setReadOnly(bool b)
 
 void IProperty::setEnabled(bool b)
 {
-	mIsReadOnly = b;
+	mIsEnabled = b;
 	emit propertyStructureChanged();
 }
 
 void IProperty::setModified(bool b)
 {
-	mIsReadOnly = b;
+	mIsModified = b;
 	emit propertyChanged();
 }
 

@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 	Plugin* plugin = mPluginManager.loadPlugin(plName);
 
-	if (plugin)
+	if (plugin && plugin->isValid())
 	{
 		openSimulation(plugin->sim());
 	}

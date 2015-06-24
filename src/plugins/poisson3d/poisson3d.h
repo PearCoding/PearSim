@@ -9,9 +9,11 @@
 #include "renderer/material.h"
 #include "renderer/environment.h"
 
+class IntProperty;
 class ActorInteractor;
 class Poisson3D : public ISimulation
 {
+	Q_OBJECT
 public:
 	Poisson3D();
 	~Poisson3D();
@@ -27,19 +29,25 @@ public:
 	}
 
 	IInteractor* interactor();
+	PropertyTable* properties();
 
 	virtual void draw(Renderer *);
 	virtual void resizeResources(int w, int h);
 	virtual void initResources();
 	virtual void cleanResources();
 
+private slots:
+	void propertyValuesChanged();
+
 private:
+	void calculate();
+
 	Camera mCamera;
 
 	EmptyActor mRootActor;
 	Grid mGrid;
 
-	FloatDataGrid mDataGrid;
+	FloatDataGrid* mDataGrid;
 	StandardGradient mGradient;
 
 	Material mMaterial;
@@ -47,4 +55,8 @@ private:
 	Environment mEnvironment;
 
 	ActorInteractor* mInteractor;
+	PropertyTable* mPropertyTable;
+
+	bool mRebuild;
+	IntProperty* mGridSizeProperty;
 };

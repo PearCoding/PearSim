@@ -19,6 +19,10 @@ SimulationView::~SimulationView()
 void SimulationView::setSimulation(ISimulation* sim)
 {
 	mSimulation = sim;
+	if (mSimulation)
+	{
+		connect(mSimulation, SIGNAL(redrawRequest()), this, SLOT(repaint()));
+	}
 }
 
 void SimulationView::setLogger(QOpenGLDebugLogger* log)
