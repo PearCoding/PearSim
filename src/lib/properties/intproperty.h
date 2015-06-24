@@ -17,9 +17,11 @@ public:
 
 	int maxValue() const;
 	int minValue() const;
+	int stepSize() const;
 
 	void setMaxValue(int i);
 	void setMinValue(int i);
+	void setStepSize(int i);
 
 	void setValue(int val);
 	int value() const;
@@ -37,4 +39,5 @@ private:
 
 	int mMaxValue;
 	int mMinValue;
+	int mStepSize;
 };

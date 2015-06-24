@@ -15,6 +15,7 @@ mProperties(nullptr)
 	setAlternatingRowColors(true);
 	setRootIsDecorated(true);
 	setSelectionMode(QAbstractItemView::NoSelection);
+	setFocusPolicy(Qt::NoFocus);
 
 	QStringList headerList;
 	headerList << tr("Property") << tr("Value");
@@ -46,7 +47,8 @@ void PropertyView::setPropertyTable(PropertyTable* table)
 	{
 		foreach(IProperty* prop, mProperties->topProperties())
 		{
-			QTreeWidgetItem* item = createItem(prop);
+			QTreeWidgetItem* item = new QTreeWidgetItem(this);
+			setupItem(item, prop);
 			mMapper.insert(item, prop);
 
 			addChildItems(item, prop);
@@ -58,7 +60,8 @@ void PropertyView::addChildItems(QTreeWidgetItem* parent, IProperty* property)
 {
 	foreach(IProperty* prop, property->childs())
 	{
-		QTreeWidgetItem* item = createItem(prop);
+		QTreeWidgetItem* item = new QTreeWidgetItem(parent);
+		setupItem(item, prop);
 		parent->addChild(item);
 		mMapper.insert(item, prop);
 
@@ -66,10 +69,8 @@ void PropertyView::addChildItems(QTreeWidgetItem* parent, IProperty* property)
 	}
 }
 
-QTreeWidgetItem* PropertyView::createItem(IProperty* property)
+QTreeWidgetItem* PropertyView::setupItem(QTreeWidgetItem* item, IProperty* property)
 {
-	QTreeWidgetItem* item = new QTreeWidgetItem(this);
-
 	item->setDisabled(!property->isEnabled());
 	item->setText(0, property->propertyName());
 
@@ -89,7 +90,20 @@ QTreeWidgetItem* PropertyView::createItem(IProperty* property)
 	}
 	else
 	{
-		item->setText(1, property->valueText());
+		if (property->valueText().isEmpty())
+		{
+			item->setFirstColumnSpanned(true);
+			item->setBackgroundColor(0, QColor(180, 180, 180));
+			item->setTextColor(0, QColor(255, 255, 255));
+
+			QFont f = item->font(0);
+			f.setBold(true);
+			item->setFont(0, f);
+		}
+		else
+		{
+			item->setText(1, property->valueText());
+		}
 	}
 
 	return item;

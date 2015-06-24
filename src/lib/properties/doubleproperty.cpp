@@ -1,8 +1,8 @@
-#include "intproperty.h"
+#include "doubleproperty.h"
 
-#include <QSpinBox>
+#include <QDoubleSpinBox>
 
-IntProperty::IntProperty() :
+DoubleProperty::DoubleProperty() :
 IProperty(),
 mSpinBox(nullptr),
 mValue(0), mOldValue(0),
@@ -10,32 +10,32 @@ mMaxValue(100000), mMinValue(-100000), mStepSize(1)
 {
 }
 
-IntProperty::~IntProperty()
+DoubleProperty::~DoubleProperty()
 {
 }
 
-QString IntProperty::valueText() const
+QString DoubleProperty::valueText() const
 {
 	return QString::number(mValue);
 }
 
-void IntProperty::undo()
+void DoubleProperty::undo()
 {
 	setValue(mOldValue);
 	setModified(false);
 }
 
-void IntProperty::save()
+void DoubleProperty::save()
 {
 	setDefaultValue(mValue);
 	setModified(false);
 }
 
-QWidget* IntProperty::editorWidget(QWidget* parent)
+QWidget* DoubleProperty::editorWidget(QWidget* parent)
 {
 	if (!mSpinBox)
 	{
-		mSpinBox = new QSpinBox(parent);
+		mSpinBox = new QDoubleSpinBox(parent);
 
 		mSpinBox->setEnabled(isEnabled());
 		mSpinBox->setReadOnly(isReadOnly());
@@ -44,13 +44,13 @@ QWidget* IntProperty::editorWidget(QWidget* parent)
 		mSpinBox->setMinimum(mMinValue);
 		mSpinBox->setSingleStep(mStepSize);
 
-		connect(mSpinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxChanged(int)));
+		connect(mSpinBox, SIGNAL(valueChanged(double)), this, SLOT(spinBoxChanged(double)));
 	}
 
 	return mSpinBox;
 }
 
-void IntProperty::spinBoxChanged(int val)
+void DoubleProperty::spinBoxChanged(double val)
 {
 	mValue = val;
 
@@ -66,7 +66,7 @@ void IntProperty::spinBoxChanged(int val)
 	emit valueChanged();
 }
 
-void IntProperty::setValue(int val)
+void DoubleProperty::setValue(double val)
 {
 	mValue = qMax(mMinValue, qMin(mMaxValue, val));
 
@@ -87,12 +87,12 @@ void IntProperty::setValue(int val)
 	}
 }
 
-int IntProperty::value() const
+double DoubleProperty::value() const
 {
 	return mValue;
 }
 
-void IntProperty::setDefaultValue(int val)
+void DoubleProperty::setDefaultValue(double val)
 {
 	mOldValue = qMax(mMinValue, qMin(mMaxValue, val));
 
@@ -106,27 +106,27 @@ void IntProperty::setDefaultValue(int val)
 	}
 }
 
-int IntProperty::defaultValue() const
+double DoubleProperty::defaultValue() const
 {
 	return mOldValue;
 }
 
-int IntProperty::maxValue() const
+double DoubleProperty::maxValue() const
 {
 	return mMaxValue;
 }
 
-int IntProperty::minValue() const
+double DoubleProperty::minValue() const
 {
 	return mMinValue;
 }
 
-int IntProperty::stepSize() const
+double DoubleProperty::stepSize() const
 {
 	return mStepSize;
 }
 
-void IntProperty::setMaxValue(int i)
+void DoubleProperty::setMaxValue(double i)
 {
 	mMaxValue = i;
 
@@ -136,7 +136,7 @@ void IntProperty::setMaxValue(int i)
 	}
 }
 
-void IntProperty::setMinValue(int i)
+void DoubleProperty::setMinValue(double i)
 {
 	mMinValue = i;
 
@@ -146,7 +146,7 @@ void IntProperty::setMinValue(int i)
 	}
 }
 
-void IntProperty::setStepSize(int i)
+void DoubleProperty::setStepSize(double i)
 {
 	mStepSize = i;
 

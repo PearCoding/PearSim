@@ -31,6 +31,8 @@ SET(PSL_PLUGIN_Src
   ${PSL_Root}/plugin/pluginmanager.cpp)
 SOURCE_GROUP("Source Files\\Plugin" FILES ${PSL_PLUGIN_Src})
 SET(PSL_PROPERTIES_Src
+  ${PSL_Root}/properties/doubleproperty.cpp
+  ${PSL_Root}/properties/groupproperty.cpp
   ${PSL_Root}/properties/intproperty.cpp
   ${PSL_Root}/properties/iproperty.cpp
   ${PSL_Root}/properties/propertytable.cpp)
@@ -86,6 +88,8 @@ SET(PSL_PLUGIN_Hdr
   ${PSL_Root}/plugin/pluginmanager.h)
 SOURCE_GROUP("Header Files\\Plugin" FILES ${PSL_PLUGIN_Hdr})
 SET(PSL_PROPERTIES_Hdr
+  ${PSL_Root}/properties/doubleproperty.h
+  ${PSL_Root}/properties/groupproperty.h
   ${PSL_Root}/properties/intproperty.h
   ${PSL_Root}/properties/iproperty.h
   ${PSL_Root}/properties/propertytable.h)

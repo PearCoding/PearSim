@@ -23,7 +23,7 @@ protected:
 
 private:
 	void addChildItems(QTreeWidgetItem* parent, IProperty*);
-	QTreeWidgetItem* createItem(IProperty* property);
+	QTreeWidgetItem* setupItem(QTreeWidgetItem* item, IProperty* property);
 
 	PropertyTable* mProperties;
 	QMap<QTreeWidgetItem*, IProperty*> mMapper;

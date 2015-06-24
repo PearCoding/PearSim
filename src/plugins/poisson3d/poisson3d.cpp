@@ -4,7 +4,12 @@
 #include "plugin/iplugin.h"
 
 #include "properties/propertytable.h"
+#include "properties/doubleproperty.h"
+#include "properties/groupproperty.h"
 #include "properties/intproperty.h"
+
+const int DEFAULT_GRID_SIZE = 100;
+const float DEFAULT_GRID_FACTOR = 0.6f;
 
 Poisson3D::Poisson3D() :
 	ISimulation(),
@@ -18,27 +23,40 @@ Poisson3D::Poisson3D() :
 	mMaterial.setSmoothness(10);
 
 	mContourMaterial.setDiffuse(Qt::red);
-
-	//mEnvironment.setAmbientFactor(1);
-
+	
 	mInteractor = new ActorInteractor();
 	mInteractor->setActor(&mRootActor);
 
 	mPropertyTable = new PropertyTable;
+	mGridGroup = new GroupProperty;
+	mGridGroup->setPropertyName(tr("Grid"));
+
+	mGridFactorProperty = new DoubleProperty;
+	mGridFactorProperty->setMinValue(0);
+	mGridFactorProperty->setMaxValue(1);
+	mGridFactorProperty->setDefaultValue(DEFAULT_GRID_FACTOR);
+	mGridFactorProperty->setValue(DEFAULT_GRID_FACTOR);
+	mGridFactorProperty->setStepSize(0.1);
+	mGridFactorProperty->setPropertyName("Line-Factor");
+	mGridGroup->addChild(mGridFactorProperty);
+
 	mGridSizeProperty = new IntProperty;
 	mGridSizeProperty->setMinValue(2);
-	mGridSizeProperty->setDefaultValue(10);
-	mGridSizeProperty->setValue(10);
-	mGridSizeProperty->setPropertyName("Grid Size");
-	mPropertyTable->add(mGridSizeProperty);
+	mGridSizeProperty->setDefaultValue(DEFAULT_GRID_SIZE);
+	mGridSizeProperty->setValue(DEFAULT_GRID_SIZE);
+	mGridSizeProperty->setPropertyName("Size");
+	mGridGroup->addChild(mGridSizeProperty);
 
-	connect(mGridSizeProperty, SIGNAL(valueChanged()), this, SLOT(propertyValuesChanged()));
+	mPropertyTable->add(mGridGroup);
+
+	connect(mGridFactorProperty, SIGNAL(valueChanged()), this, SLOT(gridValuesChanged()));
+	connect(mGridSizeProperty, SIGNAL(valueChanged()), this, SLOT(gridStructureChanged()));
 
 	mGrid.setParent(&mRootActor);
 	mGrid.setGradient(&mGradient);
-	mGrid.setGridFactor(0);
+	mGrid.setGridFactor(DEFAULT_GRID_FACTOR);
 
-	mDataGrid = new FloatDataGrid(10, 10);
+	mDataGrid = new FloatDataGrid(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE);
 	calculate();
 }
 
@@ -105,13 +123,19 @@ void Poisson3D::cleanResources()
 	ISimulation::cleanResources();
 }
 
-void Poisson3D::propertyValuesChanged()
+void Poisson3D::gridStructureChanged()
 {
 	delete mDataGrid;
 	mDataGrid = new FloatDataGrid(mGridSizeProperty->value(), mGridSizeProperty->value());
 	calculate();
-
+	
 	mRebuild = true;
+	emit redrawRequest();
+}
+
+void Poisson3D::gridValuesChanged()
+{
+	mGrid.setGridFactor(mGridFactorProperty->value());
 	emit redrawRequest();
 }
 

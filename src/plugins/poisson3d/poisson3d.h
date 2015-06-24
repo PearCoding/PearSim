@@ -9,7 +9,10 @@
 #include "renderer/material.h"
 #include "renderer/environment.h"
 
+class DoubleProperty;
+class GroupProperty;
 class IntProperty;
+
 class ActorInteractor;
 class Poisson3D : public ISimulation
 {
@@ -37,7 +40,8 @@ public:
 	virtual void cleanResources();
 
 private slots:
-	void propertyValuesChanged();
+	void gridStructureChanged();
+	void gridValuesChanged();
 
 private:
 	void calculate();
@@ -58,5 +62,8 @@ private:
 	PropertyTable* mPropertyTable;
 
 	bool mRebuild;
+
+	GroupProperty* mGridGroup;
 	IntProperty* mGridSizeProperty;
+	DoubleProperty* mGridFactorProperty;
 };
