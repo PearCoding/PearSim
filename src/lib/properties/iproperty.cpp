@@ -2,7 +2,7 @@
 
 IProperty::IProperty() :
 QObject(),
-mIsReadOnly(false), mIsEnabled(true), mIsModified(false)
+mIsReadOnly(false), mIsEnabled(true), mIsModified(false), mIsHeader(false)
 {
 }
 
@@ -46,6 +46,11 @@ bool IProperty::isModified() const
 	return mIsModified;
 }
 
+bool IProperty::isHeader() const
+{
+	return mIsHeader;
+}
+
 void IProperty::setToolTip(const QString& str)
 {
 	mToolTip = str;
@@ -85,6 +90,12 @@ void IProperty::setEnabled(bool b)
 void IProperty::setModified(bool b)
 {
 	mIsModified = b;
+	emit propertyChanged();
+}
+
+void IProperty::makeHeader(bool b)
+{
+	mIsHeader = b;
 	emit propertyChanged();
 }
 

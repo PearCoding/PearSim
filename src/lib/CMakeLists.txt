@@ -31,11 +31,13 @@ SET(PSL_PLUGIN_Src
   ${PSL_Root}/plugin/pluginmanager.cpp)
 SOURCE_GROUP("Source Files\\Plugin" FILES ${PSL_PLUGIN_Src})
 SET(PSL_PROPERTIES_Src
+  ${PSL_Root}/properties/colorproperty.cpp
   ${PSL_Root}/properties/doubleproperty.cpp
   ${PSL_Root}/properties/groupproperty.cpp
   ${PSL_Root}/properties/intproperty.cpp
   ${PSL_Root}/properties/iproperty.cpp
-  ${PSL_Root}/properties/propertytable.cpp)
+  ${PSL_Root}/properties/propertytable.cpp
+  ${PSL_Root}/properties/selectionproperty.cpp)
 SOURCE_GROUP("Source Files\\Properties" FILES ${PSL_PROPERTIES_Src})
 SET(PSL_RENDERER_Src
   ${PSL_Root}/renderer/camera.cpp
@@ -49,6 +51,7 @@ SET(PSL_SIMS_Src
   ${PSL_Root}/sims/isimulation.cpp)
 SOURCE_GROUP("Source Files\\Sims" FILES ${PSL_SIMS_Src})
 SET(PSL_UTILS_Src
+  ${PSL_Root}/utils/colorbutton.cpp
   ${PSL_Root}/utils/gradient.cpp)
 SOURCE_GROUP("Source Files\\Utils" FILES ${PSL_UTILS_Src})
 SET(PSL_Src
@@ -88,11 +91,13 @@ SET(PSL_PLUGIN_Hdr
   ${PSL_Root}/plugin/pluginmanager.h)
 SOURCE_GROUP("Header Files\\Plugin" FILES ${PSL_PLUGIN_Hdr})
 SET(PSL_PROPERTIES_Hdr
+  ${PSL_Root}/properties/colorproperty.h
   ${PSL_Root}/properties/doubleproperty.h
   ${PSL_Root}/properties/groupproperty.h
   ${PSL_Root}/properties/intproperty.h
   ${PSL_Root}/properties/iproperty.h
-  ${PSL_Root}/properties/propertytable.h)
+  ${PSL_Root}/properties/propertytable.h
+  ${PSL_Root}/properties/selectionproperty.h)
 SOURCE_GROUP("Header Files\\Properties" FILES ${PSL_PROPERTIES_Hdr})
 SET(PSL_RENDERER_Hdr
   ${PSL_Root}/renderer/camera.h
@@ -106,6 +111,7 @@ SET(PSL_SIMS_Hdr
   ${PSL_Root}/sims/isimulation.h)
 SOURCE_GROUP("Header Files\\Sims" FILES ${PSL_SIMS_Hdr})
 SET(PSL_UTILS_Hdr
+  ${PSL_Root}/utils/colorbutton.h
   ${PSL_Root}/utils/gradient.h)
 SOURCE_GROUP("Header Files\\Utils" FILES ${PSL_UTILS_Hdr})
 SET(PSL_Hdr

@@ -6,7 +6,7 @@ DoubleProperty::DoubleProperty() :
 IProperty(),
 mSpinBox(nullptr),
 mValue(0), mOldValue(0),
-mMaxValue(100000), mMinValue(-100000), mStepSize(1)
+mMaxValue(100000), mMinValue(-100000), mStepSize(1), mDecimals(8)
 {
 }
 
@@ -43,6 +43,7 @@ QWidget* DoubleProperty::editorWidget(QWidget* parent)
 		mSpinBox->setMaximum(mMaxValue);
 		mSpinBox->setMinimum(mMinValue);
 		mSpinBox->setSingleStep(mStepSize);
+		mSpinBox->setDecimals(mDecimals);
 
 		connect(mSpinBox, SIGNAL(valueChanged(double)), this, SLOT(spinBoxChanged(double)));
 	}
@@ -126,6 +127,11 @@ double DoubleProperty::stepSize() const
 	return mStepSize;
 }
 
+int DoubleProperty::decimals() const
+{
+	return mDecimals;
+}
+
 void DoubleProperty::setMaxValue(double i)
 {
 	mMaxValue = i;
@@ -153,5 +159,15 @@ void DoubleProperty::setStepSize(double i)
 	if (mSpinBox)
 	{
 		mSpinBox->setSingleStep(i);
+	}
+}
+
+void DoubleProperty::setDecimals(int i)
+{
+	mDecimals = i;
+
+	if (mSpinBox)
+	{
+		mSpinBox->setDecimals(i);
 	}
 }

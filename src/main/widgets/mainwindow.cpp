@@ -81,6 +81,7 @@ void MainWindow::openSimulation(ISimulation* sim)
 	if (sim)
 	{
 		ui->propertyView->setPropertyTable(mSimulation->properties());
+		ui->propertyView->expandToDepth(1);
 	}
 	else
 	{

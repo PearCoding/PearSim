@@ -3,6 +3,7 @@
 GroupProperty::GroupProperty() :
 IProperty()
 {
+	makeHeader(true);
 }
 
 GroupProperty::~GroupProperty()

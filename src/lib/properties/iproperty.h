@@ -19,6 +19,7 @@ public:
 	bool isReadOnly() const;
 	bool isEnabled() const;
 	bool isModified() const;
+	bool isHeader() const;
 
 	void setToolTip(const QString& str);
 	void setStatusTip(const QString& str);
@@ -27,6 +28,7 @@ public:
 	void setReadOnly(bool b);
 	void setEnabled(bool b);
 	void setModified(bool b);
+	void makeHeader(bool b);
 
 	void addChild(IProperty* property);
 	void removeChild(IProperty* property);
@@ -62,6 +64,7 @@ private:
 	bool mIsReadOnly;
 	bool mIsEnabled;
 	bool mIsModified;
+	bool mIsHeader;
 
 	QList<IProperty*> mChilds;
 };

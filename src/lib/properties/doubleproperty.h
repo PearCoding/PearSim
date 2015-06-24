@@ -18,10 +18,12 @@ public:
 	double maxValue() const;
 	double minValue() const;
 	double stepSize() const;
+	int decimals() const;
 
 	void setMaxValue(double i);
 	void setMinValue(double i);
 	void setStepSize(double i);
+	void setDecimals(int i);
 
 	void setValue(double val);
 	double value() const;
@@ -40,4 +42,5 @@ private:
 	double mMaxValue;
 	double mMinValue;
 	double mStepSize;
+	int mDecimals;
 };

@@ -83,22 +83,22 @@ QTreeWidgetItem* PropertyView::setupItem(QTreeWidgetItem* item, IProperty* prope
 	item->setWhatsThis(0, property->whatsThis());
 	item->setWhatsThis(1, property->whatsThis());
 	
-	QWidget* editor = property->editorWidget(this);
-	if (editor)
+	if (property->isHeader())
 	{
-		setItemWidget(item, 1, editor);
+		item->setFirstColumnSpanned(true);
+		item->setTextColor(0, QColor(255, 255, 255));
+
+		QFont f = item->font(0);
+		f.setBold(true);
+		f.setPointSizeF(f.pointSizeF()*1.1f);
+		item->setFont(0, f);
 	}
 	else
 	{
-		if (property->valueText().isEmpty())
+		QWidget* editor = property->editorWidget(this);
+		if (editor)
 		{
-			item->setFirstColumnSpanned(true);
-			item->setBackgroundColor(0, QColor(180, 180, 180));
-			item->setTextColor(0, QColor(255, 255, 255));
-
-			QFont f = item->font(0);
-			f.setBold(true);
-			item->setFont(0, f);
+			setItemWidget(item, 1, editor);
 		}
 		else
 		{
@@ -123,8 +123,26 @@ void PropertyView::reset()
 void PropertyView::drawRow(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
 	QTreeWidgetItem* item = itemFromIndex(index);
+	IProperty* property = mMapper[item];
+
+	if (property->isHeader())//Group
+	{
+		painter->save();
+		painter->setBrush(QColor(180, 180, 180));
+		painter->setPen(Qt::NoPen);
+		painter->drawRect(option.rect);
+		painter->restore();
+
+		// Really bad hack to prevent the alternating color on top of the header color!
+		const_cast<PropertyView*>(this)->setAlternatingRowColors(false);
+	}
 
 	QTreeWidget::drawRow(painter, option, index);
+
+	if (property->isHeader())
+	{
+		const_cast<PropertyView*>(this)->setAlternatingRowColors(true);
+	}
 
 	painter->save();
 	painter->setPen(QPen(Qt::gray));
@@ -135,9 +153,14 @@ void PropertyView::drawRow(QPainter* painter, const QStyleOptionViewItem& option
 void PropertyView::drawBranches(QPainter* painter, const QRect & rect, const QModelIndex & index) const
 {
 	QTreeWidget::drawBranches(painter, rect, index);
-	
-	painter->save();
-	painter->setPen(QPen(Qt::gray));
-	painter->drawLine(rect.right(), rect.top(), rect.right(), rect.bottom());
-	painter->restore();
+
+	QTreeWidgetItem* item = itemFromIndex(index);
+	IProperty* property = mMapper[item];
+	if (!property->isHeader())
+	{
+		painter->save();
+		painter->setPen(QPen(Qt::gray));
+		painter->drawLine(rect.right(), rect.top(), rect.right(), rect.bottom());
+		painter->restore();
+	}
 }

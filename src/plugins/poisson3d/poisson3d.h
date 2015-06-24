@@ -9,9 +9,11 @@
 #include "renderer/material.h"
 #include "renderer/environment.h"
 
+class ColorProperty;
 class DoubleProperty;
 class GroupProperty;
 class IntProperty;
+class SelectionProperty;
 
 class ActorInteractor;
 class Poisson3D : public ISimulation
@@ -66,4 +68,10 @@ private:
 	GroupProperty* mGridGroup;
 	IntProperty* mGridSizeProperty;
 	DoubleProperty* mGridFactorProperty;
+	DoubleProperty* mGridSpacingProperty;
+	DoubleProperty* mGridHSpacingProperty;
+
+	GroupProperty* mLookGroup;
+	SelectionProperty* mColorMapProperty;
+	ColorProperty* mBackgroundColorProperty;
 };
