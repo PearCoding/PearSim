@@ -10,6 +10,8 @@
 #include "properties/intproperty.h"
 #include "properties/selectionproperty.h"
 
+#include "properties/textproperty.h"
+
 const int DEFAULT_GRID_SIZE = 100;
 const float DEFAULT_GRID_FACTOR = 0.6f;
 const float DEFAULT_GRID_SPACING = 0.05f;
@@ -86,6 +88,10 @@ Poisson3D::Poisson3D() :
 	mBackgroundColorProperty->setDefaultColor(Qt::black);
 	mBackgroundColorProperty->setPropertyName(tr("Background"));
 	mLookGroup->addChild(mBackgroundColorProperty);
+
+	mTextProperty = new TextProperty;
+	mTextProperty->setPropertyName("Test");
+	mLookGroup->addChild(mTextProperty);
 
 	mPropertyTable->add(mLookGroup);
 

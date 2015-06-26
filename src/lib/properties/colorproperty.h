@@ -1,9 +1,11 @@
 #pragma once
 
 #include "iproperty.h"
+
 #include <QColor>
 
 class ColorButton;
+class IntProperty;
 class PS_LIB ColorProperty : public IProperty
 {
 	Q_OBJECT
@@ -24,9 +26,14 @@ public:
 
 private slots:
 	void colorChanged(const QColor &);
+	void dataChanged();
 
 private: 
 	ColorButton* mWidget;
 	QColor mDefaultColor;
 	QColor mColor;
+
+	IntProperty* mRedProperty;
+	IntProperty* mGreenProperty;
+	IntProperty* mBlueProperty;
 };

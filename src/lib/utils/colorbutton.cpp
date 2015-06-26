@@ -9,10 +9,11 @@
 #include <QStyleOption>
 #include <QDrag>
 
-#define PS_COLOR_BUTTON_PADDING (5)
+#define PS_COLOR_BUTTON_PADDING (4)
 
 ColorButton::ColorButton(QWidget *parent) :
-	QPushButton(parent), mColor(Qt::black), mMousePressed(false)
+	QPushButton(parent), mColor(Qt::black), mMousePressed(false),
+	mIsFlat(false)
 {
 	setAcceptDrops(true);
 	connect(this, SIGNAL(clicked()), SLOT(changeColor()));
@@ -20,6 +21,17 @@ ColorButton::ColorButton(QWidget *parent) :
 
 ColorButton::~ColorButton()
 {
+}
+
+void ColorButton::setFlat(bool b)
+{
+	mIsFlat = b;
+	repaint();
+}
+
+bool ColorButton::isFlat() const
+{
+	return mIsFlat;
 }
 
 const QColor& ColorButton::color() const
@@ -61,7 +73,15 @@ void ColorButton::drawButton(QPainter *p)
 	buttonOptions.rect = rect();
 	buttonOptions.palette = palette();
 	buttonOptions.state = (isDown() ? QStyle::State_Sunken : QStyle::State_Raised);
-	style()->drawPrimitive(QStyle::PE_PanelButtonBevel, &buttonOptions, p, this);
+
+	if (!mIsFlat)
+	{
+		style()->drawPrimitive(QStyle::PE_PanelButtonBevel, &buttonOptions, p, this);
+	}
+	else
+	{
+		style()->drawPrimitive(QStyle::PE_FrameDefaultButton, &buttonOptions, p, this);
+	}
 
 	p->save();
 	drawButtonLabel(p);

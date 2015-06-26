@@ -37,7 +37,8 @@ SET(PSL_PROPERTIES_Src
   ${PSL_Root}/properties/intproperty.cpp
   ${PSL_Root}/properties/iproperty.cpp
   ${PSL_Root}/properties/propertytable.cpp
-  ${PSL_Root}/properties/selectionproperty.cpp)
+  ${PSL_Root}/properties/selectionproperty.cpp
+  ${PSL_Root}/properties/textproperty.cpp)
 SOURCE_GROUP("Source Files\\Properties" FILES ${PSL_PROPERTIES_Src})
 SET(PSL_RENDERER_Src
   ${PSL_Root}/renderer/camera.cpp
@@ -97,7 +98,8 @@ SET(PSL_PROPERTIES_Hdr
   ${PSL_Root}/properties/intproperty.h
   ${PSL_Root}/properties/iproperty.h
   ${PSL_Root}/properties/propertytable.h
-  ${PSL_Root}/properties/selectionproperty.h)
+  ${PSL_Root}/properties/selectionproperty.h
+  ${PSL_Root}/properties/textproperty.h)
 SOURCE_GROUP("Header Files\\Properties" FILES ${PSL_PROPERTIES_Hdr})
 SET(PSL_RENDERER_Hdr
   ${PSL_Root}/renderer/camera.h

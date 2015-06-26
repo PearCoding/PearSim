@@ -14,6 +14,7 @@ class DoubleProperty;
 class GroupProperty;
 class IntProperty;
 class SelectionProperty;
+class TextProperty;
 
 class ActorInteractor;
 class Poisson3D : public ISimulation
@@ -25,7 +26,7 @@ public:
 	
 	QString name() const
 	{
-		return "Poisson 3D";
+		return "Test 3D";
 	}
 
 	int flags() const
@@ -74,4 +75,6 @@ private:
 	GroupProperty* mLookGroup;
 	SelectionProperty* mColorMapProperty;
 	ColorProperty* mBackgroundColorProperty;
+
+	TextProperty* mTextProperty;
 };

@@ -11,6 +11,9 @@ public:
 	ColorButton(QWidget *parent);
 	~ColorButton();
 
+	void setFlat(bool b);
+	bool isFlat() const;
+
 	const QColor &color() const;
 	void setColor(const QColor &);
 	QSize sizeHint() const;
@@ -37,4 +40,5 @@ private:
 	QColor mColor;
 	QPoint mPressPos;
 	bool mMousePressed;
+	bool mIsFlat;
 };
