@@ -74,8 +74,7 @@ SET(PSL_ACTORS_Hdr
   ${PSL_Root}/actors/sphere.h)
 SOURCE_GROUP("Header Files\\Actors" FILES ${PSL_ACTORS_Hdr})
 SET(PSL_DATA_Hdr
-  ${PSL_Root}/data/datacontainer.h
-  ${PSL_Root}/data/datagrid.h)
+  ${PSL_Root}/data/data.h)
 SOURCE_GROUP("Header Files\\Data" FILES ${PSL_DATA_Hdr})
 SET(PSL_INTERACTORS_Hdr
   ${PSL_Root}/interactors/actorinteractor.h

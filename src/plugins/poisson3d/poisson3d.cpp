@@ -106,7 +106,7 @@ Poisson3D::Poisson3D() :
 	mGrid.setGradient(&mGradient);
 	mGrid.setGridFactor(DEFAULT_GRID_FACTOR);
 
-	mDataGrid = new FloatDataGrid(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE);
+	mDataGrid = new FloatData(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE);
 	calculate();
 }
 
@@ -188,7 +188,7 @@ void Poisson3D::cleanResources()
 void Poisson3D::gridStructureChanged()
 {
 	delete mDataGrid;
-	mDataGrid = new FloatDataGrid(mGridSizeProperty->value(), mGridSizeProperty->value());
+	mDataGrid = new FloatData(mGridSizeProperty->value(), mGridSizeProperty->value());
 	calculate();
 
 	switch (mColorMapProperty->index())
@@ -223,13 +223,16 @@ void Poisson3D::gridValuesChanged()
 
 void Poisson3D::calculate()
 {
-	for (uint x = 0; x < mDataGrid->width(); ++x)
+	const FloatData::size_type w = mDataGrid->elementSize()[0];
+	const FloatData::size_type h = mDataGrid->elementSize()[1];
+
+	for (FloatData::size_type x = 0; x < w; ++x)
 	{
-		float px = 4 * 3.1415*x / (float)mDataGrid->width();
-		for (uint y = 0; y < mDataGrid->height(); ++y)
+		float px = 4 * 3.1415*x / (float)w;
+		for (FloatData::size_type y = 0; y < h; ++y)
 		{
-			float py = 4 * 3.1415*y / (float)mDataGrid->height();
-			mDataGrid->set(x, y, cos(px) + sin(py));
+			float py = 4 * 3.1415*y / (float)h;
+			mDataGrid->set(x + y*w, cos(px) + sin(py));
 		}
 	}
 }

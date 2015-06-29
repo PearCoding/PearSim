@@ -6,7 +6,7 @@
 #include <QOpenGLTexture>
 
 #include "iactor.h"
-#include "data/datagrid.h"
+#include "data/data.h"
 #include "utils/gradient.h"
 
 class Material;
@@ -16,8 +16,8 @@ public:
 	Grid(IActor* parent = nullptr);
 	~Grid();
 
-	void build(FloatDataGrid* grid, float spacing = 1.0f, float hSpaceing = 1.0f);
-	void build(int xc, int yc, float spacing, float hSpaceing);
+	void build(FloatData* grid, float spacing = 1.0f, float hSpaceing = 1.0f);
+	void build(size_t xc, size_t yc, float spacing, float hSpaceing);
 	void cleanup();
 
 	void draw(Camera *camera, Environment* env);
@@ -59,9 +59,9 @@ private:
 	GLfloat* mVertexData;
 	GLuint* mIndexData;
 
-	FloatDataGrid* mGrid;
-	int mXCount;
-	int mYCount;
+	FloatData* mGrid;
+	size_t mXCount;
+	size_t mYCount;
 
 	QOpenGLTexture mHeightTex;
 	QOpenGLTexture mGradientTex;

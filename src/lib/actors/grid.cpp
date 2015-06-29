@@ -50,26 +50,27 @@ static const char *fragmentShaderSourceCore =
 		"   fragColor = factor*texture(gradientMap, t);\n"
 		"}\n";
 
-void Grid::build(FloatDataGrid* grid, float spacing, float hSpaceing)
+void Grid::build(FloatData* grid, float spacing, float hSpaceing)
 {
-	//Q_ASSERT(grid);
+	Q_ASSERT(grid && grid->dimension() == 2);
 
-	if(mGrid && mXCount != 0 && grid->width() == mXCount &&
-			mYCount != 0 && grid->height())//Just update values
+	mGrid = grid;
+	FloatData::element_size_type size = grid->elementSize();
+	
+	if (mXCount != 0 && size.at(0) == mXCount &&
+		mYCount != 0 && size.at(1) == mYCount)//Just update values
 	{
-		mGrid = grid;
 
 		//TODO: Optimize
-		build(grid->width(), grid->height(), spacing, hSpaceing);
+		build(size.at(0), size.at(1), spacing, hSpaceing);
 	}
 	else
 	{
-		mGrid = grid;
-		build(grid->width(), grid->height(), spacing, hSpaceing);
+		build(size.at(0), size.at(1), spacing, hSpaceing);
 	}
 }
 
-void Grid::build(int xc, int yc, float spacing, float hSpaceing)
+void Grid::build(size_t xc, size_t yc, float spacing, float hSpaceing)
 {
 	Q_ASSERT(xc > 1 && yc > 1 && spacing != 0);
 
@@ -102,7 +103,7 @@ void Grid::build(int xc, int yc, float spacing, float hSpaceing)
 			float height = 0;
 			if(mGrid && max != min)
 			{
-				height = (mGrid->at(x,y)-min)/(max-min);
+				height = (mGrid->at(x+y*xc)-min)/(max-min);
 				height = !std::isfinite(height) ? 0 : height;
 			}
 

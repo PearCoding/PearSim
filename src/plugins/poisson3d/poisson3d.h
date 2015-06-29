@@ -54,7 +54,7 @@ private:
 	EmptyActor mRootActor;
 	Grid mGrid;
 
-	FloatDataGrid* mDataGrid;
+	FloatData* mDataGrid;
 	StandardGradient mGradient;
 
 	Material mMaterial;
