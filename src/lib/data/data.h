@@ -25,7 +25,7 @@ private:
 	struct InternalData
 	{
 		size_type mLinearSize;
-		std::vector<size_type> mSize;
+		element_size_type mSize;
 		value_type* mData;
 		size_type mRefs;
 	};
@@ -147,13 +147,14 @@ public:
 		}
 	};
 
-	Data(size_type w = 1) :
-		Data(element_size_type({ w }))
+	// Constructors
+	Data(size_type w = 1, size_type h = 0, size_type d = 0) :
+		Data({ w, h, d})
 	{
 	}
 
-	Data(size_type w, size_type h) :
-		Data(element_size_type({ w, h }))
+	Data(std::initializer_list<size_type> size) :
+		Data(element_size_type(size))
 	{
 	}
 
@@ -165,12 +166,28 @@ public:
 		mRef = new InternalData;
 		mRef->mRefs = 1;
 		mRef->mLinearSize = 1;
+		mRef->mSize = size;
 
-		for(size_type i : size)
+		for (element_size_type::iterator it = mRef->mSize.begin();
+			it != mRef->mSize.end();
+			++it)
 		{
-			Q_ASSERT(i > 0);
-			mRef->mLinearSize *= i;
+			if (*it != 0)
+			{
+				mRef->mLinearSize *= *it;
+			}
+			else
+			{
+				it = mRef->mSize.erase(it);
+
+				if (it == mRef->mSize.end())
+				{
+					break;
+				}
+			}
 		}
+
+		mRef->mSize.shrink_to_fit();
 
 		mRef->mData = new value_type[mRef->mLinearSize];
 		memset(mRef->mData, 0, sizeof(value_type)*mRef->mLinearSize);
@@ -263,14 +280,7 @@ public:
 
 	inline value_type at(const element_size_type& indexes) const
 	{
-		size_type index = 0;
-
-		for (size_type i = 0; i < indexes.size(); ++i)
-		{
-			index += indexes.at(i)*(i == 0 ? 1 : mRef->mSize.at(i - 1));
-		}
-
-		return mRef->mData[index];
+		return mRef->mData[toLinear(indexes)];
 	}
 
 	inline value_type at (size_type i) const
@@ -279,15 +289,8 @@ public:
 	}
 
 	inline void set(const element_size_type& indexes, const_reference val)
-	{
-		size_type index = 0;
-
-		for (size_type i = 0; i < indexes.size(); ++i)
-		{
-			index += indexes.at(i)*(i == 0 ? 1 : mRef->mSize.at(i - 1));
-		}
-		
-		mRef->mData[index] = val;
+	{		
+		mRef->mData[toLinear(indexes)] = val;
 	}
 
 	inline void set(size_type i, const_reference val)
@@ -358,7 +361,7 @@ public:
 	}
 
 	// Union/Merge/Split
-	inline Data<value_type> split(const element_size_type& start, const element_size_type& end)
+	inline Data<value_type> split(const element_size_type& start, const element_size_type& end) const
 	{
 		Q_ASSERT(start.size() == end.size());
 
@@ -367,13 +370,45 @@ public:
 		{
 			size_type d = end.at(i) - start.at(i);
 			Q_ASSERT(d != 0);
-
 			diff.push_back(d);
 		}
 
 		Data<value_type> newData(diff);
+		for (size_type i = 0; newData.linearSize(); ++i)
+		{
+			element_size_type newIndexes = newData.toMulti(i);
+			element_size_type oldIndexes = newIndexes;
+
+			for (size_type j = 0; j < start.size(); ++j)
+			{
+				oldIndexes[j] += start.at(j);
+			}
+
+			newData.set(i, at(oldIndexes));
+		}
 
 		return newData;
+	}
+
+	inline size_type toLinear(const element_size_type& indexes) const
+	{
+		size_type index = 0;
+		for (size_type i = 0; i < indexes.size(); ++i)
+		{
+			index += indexes.at(i)*(i == 0 ? 1 : mRef->mSize.at(i - 1));
+		}
+		return index;
+	}
+
+	inline element_size_type toMulti(size_type index) const
+	{
+		element_size_type indexes;
+		for (size_type i = 0; i < mRef->mSize.size()-1; ++i)
+		{
+			indexes.push_back(index % mRef->mSize.at(i + 1));
+			index /= mRef->mSize.at(i + 1);
+		}
+		return indexes;
 	}
 };
 

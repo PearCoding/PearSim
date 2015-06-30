@@ -11,21 +11,25 @@ Plot2D::~Plot2D()
 	cleanup();
 }
 
-void Plot2D::build(FloatData* plots)
+void Plot2D::build(const FloatData& plots)
 {
-	Q_ASSERT(plots && plots->dimension() == 2 && plots->size() > 1);
-	Q_ASSERT(plots->elementSize()[0] % 2 == 0);
+	Q_ASSERT(plots.dimension() == 2 && plots.size() > 1);
+	Q_ASSERT(plots.elementSize()[0] % 2 == 0);
 
-	const size_t plotcount = plots->elementSize()[0] / 2;
+	const size_t plotcount = plots.elementSize()[0] / 2;
+	const size_t datacount = plots.elementSize()[1];
 	for (size_t i = 0; i < plotcount; ++i)
 	{
 		Line2D* line = new Line2D(this);
-		
 		if (mGradient)
 		{
 			QVector4D col = mGradient->value((i + 1) / (float)(plotcount));
 			line->setColor(QColor(col.x() * 255, col.y() * 255, col.z() * 255, col.w() * 255));
 		}
+
+		FloatData data = plots.split({ i * 2, 0 }, { i * 2 + 1, datacount });
+		line->build(data);
+
 		mPlots.push_back(line);
 	}
 }

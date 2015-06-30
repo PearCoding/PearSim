@@ -14,7 +14,7 @@ public:
 	Line2D(IActor* parent = nullptr);
 	~Line2D();
 
-	void build(FloatData* pos);
+	void build(const FloatData& pos);
 	void cleanup();
 
 	void draw(Camera *camera, Environment* env);
@@ -44,6 +44,6 @@ private:
 	GLfloat* mVertexData;
 	GLuint* mIndexData;
 
-	FloatData* mData;
+	FloatData mData;
 	QColor mColor;
 };

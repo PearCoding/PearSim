@@ -8,7 +8,7 @@ Line2D::Line2D(IActor *parent) :
 	mColorLoc(0),
 	mIndexVBO(QOpenGLBuffer::IndexBuffer),
 	mVertexData(nullptr), mIndexData(nullptr),
-	mData(nullptr), mColor(Qt::black)
+	mData(), mColor(Qt::black)
 {
 }
 
@@ -42,26 +42,23 @@ static const char *fragmentShaderSourceCore =
 		"   fragColor = color;\n"
 		"}\n";
 
-void Line2D::build(FloatData* data)
+void Line2D::build(const FloatData& data)
 {
-	Q_ASSERT(data && data->dimension() == 2 && data->size() > 1);
-	Q_ASSERT(data->elementSize()[0] == 2);
+	Q_ASSERT(data.dimension() == 2 && data.size() > 1);
+	Q_ASSERT(data.elementSize()[0] == 2);
 	
-	if(mData)
-	{
-		cleanup();
-	}
+	cleanup();
 
 	mData = data;
 
-	mVertexCount = data->elementSize()[1];
+	mVertexCount = data.elementSize()[1];
 	mVertexData = new GLfloat[mVertexCount*8];
 	
-	const size_t slide = data->elementSize()[1];
+	const size_t slide = data.elementSize()[1];
 	for(int i = 0; i < mVertexCount; ++i)
 	{
-		mVertexData[i * 8 + 0] = data->at(i * 2);
-		mVertexData[i * 8 + 1] = data->at(i * 2 + 1);
+		mVertexData[i * 8 + 0] = data.at(i * 2);
+		mVertexData[i * 8 + 1] = data.at(i * 2 + 1);
 		mVertexData[i * 8 + 2] = 0;
 
 		mVertexData[i * 8 + 3] = 0; mVertexData[i * 8 + 4] = 0; mVertexData[i * 8 + 5] = 1;//TODO
@@ -127,18 +124,11 @@ void Line2D::cleanup()
 		delete [] mIndexData;
 		mIndexData = nullptr;
 	}
-
-	mData = nullptr;
 }
 
 void Line2D::draw(Camera *camera, Environment*)
 {
 	Q_ASSERT(camera);
-
-	if (!mData)
-	{
-		return;
-	}
 
 	mVAO.bind();
 

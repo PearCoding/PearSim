@@ -10,7 +10,7 @@ public:
 	Plot2D(IActor* parent = nullptr);
 	~Plot2D();
 
-	void build(FloatData* plots);
+	void build(const FloatData& plots);
 	void cleanup();
 
 	void draw(Camera *camera, Environment* env);
