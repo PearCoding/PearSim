@@ -8,6 +8,7 @@ Line2D::Line2D(IActor *parent) :
 	mColorLoc(0),
 	mIndexVBO(QOpenGLBuffer::IndexBuffer),
 	mVertexData(nullptr), mIndexData(nullptr),
+	mVertexCount(0), mIndexCount(0),
 	mData(), mColor(Qt::black)
 {
 }
@@ -103,6 +104,11 @@ void Line2D::build(const FloatData& data)
 
 void Line2D::cleanup()
 {
+	if (!mProgram)
+	{
+		return;
+	}
+
 	mIndexVBO.destroy();
 	mVBO.destroy();
 	mVAO.destroy();

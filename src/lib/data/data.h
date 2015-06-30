@@ -368,13 +368,13 @@ public:
 		element_size_type diff;
 		for (size_type i = 0; i < start.size(); ++i)
 		{
-			size_type d = end.at(i) - start.at(i);
+			size_type d = end.at(i) - start.at(i) + 1;
 			Q_ASSERT(d != 0);
 			diff.push_back(d);
 		}
 
 		Data<value_type> newData(diff);
-		for (size_type i = 0; newData.linearSize(); ++i)
+		for (size_type i = 0; i < newData.linearSize(); ++i)
 		{
 			element_size_type newIndexes = newData.toMulti(i);
 			element_size_type oldIndexes = newIndexes;
@@ -403,10 +403,10 @@ public:
 	inline element_size_type toMulti(size_type index) const
 	{
 		element_size_type indexes;
-		for (size_type i = 0; i < mRef->mSize.size()-1; ++i)
+		for (size_type i = 0; i < mRef->mSize.size(); ++i)
 		{
-			indexes.push_back(index % mRef->mSize.at(i + 1));
-			index /= mRef->mSize.at(i + 1);
+			indexes.push_back(index % mRef->mSize.at(i));
+			index /= mRef->mSize.at(i);
 		}
 		return indexes;
 	}

@@ -27,7 +27,7 @@ void Plot2D::build(const FloatData& plots)
 			line->setColor(QColor(col.x() * 255, col.y() * 255, col.z() * 255, col.w() * 255));
 		}
 
-		FloatData data = plots.split({ i * 2, 0 }, { i * 2 + 1, datacount });
+		FloatData data = plots.split({ i * 2, 0 }, { i * 2 + 1, datacount - 1 });
 		line->build(data);
 
 		mPlots.push_back(line);
@@ -42,6 +42,7 @@ void Plot2D::cleanup()
 	}
 
 	qDeleteAll(mPlots);
+	mPlots.clear();
 }
 
 void Plot2D::draw(Camera *camera, Environment* env)

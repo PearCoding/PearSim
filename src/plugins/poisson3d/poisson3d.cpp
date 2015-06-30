@@ -154,6 +154,8 @@ void Poisson3D::draw(Renderer* renderer)
 	renderer->startBackVisibility();
 	mGrid.draw(&mCamera, nullptr);
 	renderer->endBackVisibility();
+
+	mPlot.draw(&mCamera, nullptr);
 }
 
 void Poisson3D::resizeResources(int w, int h)
@@ -174,6 +176,17 @@ void Poisson3D::initResources()
 
 	mGrid.build(mDataGrid, DEFAULT_GRID_SPACING, DEFAULT_GRID_HSPACING);
 
+	const size_t QUALITY = 64;
+	FloatData data(4, QUALITY);
+	for (FloatData::size_type i = 0; i < QUALITY; ++i)
+	{
+		data.set({ 0, i }, i / (float)QUALITY);
+		data.set({ 1, i }, 0.5f*sin(2 * 3.14156f*i / QUALITY));
+		data.set({ 2, i }, i / (float)QUALITY);
+		data.set({ 3, i }, 0.5f*cos(2 * 3.14156f*i / QUALITY));
+	}
+	mPlot.build(data);
+
 	glClearColor(0,0,0,1);
 	glEnable(GL_DEPTH_TEST);
 }
@@ -181,6 +194,7 @@ void Poisson3D::initResources()
 void Poisson3D::cleanResources()
 {
 	mGrid.cleanup();
+	mPlot.cleanup();
 
 	ISimulation::cleanResources();
 }

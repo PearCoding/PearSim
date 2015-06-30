@@ -5,6 +5,7 @@
 
 #include "actors/emptyactor.h"
 #include "actors/grid.h"
+#include "actors/plot2d.h"
 
 #include "renderer/material.h"
 #include "renderer/environment.h"
@@ -53,6 +54,7 @@ private:
 
 	EmptyActor mRootActor;
 	Grid mGrid;
+	Plot2D mPlot;
 
 	FloatData* mDataGrid;
 	StandardGradient mGradient;
