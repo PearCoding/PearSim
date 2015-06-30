@@ -22,9 +22,15 @@ public:
 	typedef std::vector<size_type> element_size_type;
 
 private:
-	size_type mLinearSize;
-	std::vector<size_type> mSize;
-	value_type* mData;
+	struct InternalData
+	{
+		size_type mLinearSize;
+		std::vector<size_type> mSize;
+		value_type* mData;
+		size_type mRefs;
+	};
+
+	InternalData* mRef;
 
 public:
 
@@ -152,75 +158,107 @@ public:
 	}
 
 	Data(const element_size_type& size) :
-		mSize(size)
+		mRef(nullptr)
 	{
 		Q_ASSERT(size.size() >= 1);
 
-		mLinearSize = 1;
+		mRef = new InternalData;
+		mRef->mRefs = 1;
+		mRef->mLinearSize = 1;
 
 		for(size_type i : size)
 		{
 			Q_ASSERT(i > 0);
-			mLinearSize *= i;
+			mRef->mLinearSize *= i;
 		}
 
-		mData = new value_type[mLinearSize];
-		memset(mData, 0, sizeof(value_type)*mLinearSize);
+		mRef->mData = new value_type[mRef->mLinearSize];
+		memset(mRef->mData, 0, sizeof(value_type)*mRef->mLinearSize);
+	}
+
+	Data(const Data& data) :
+		mRef(data.mRef)
+	{
+		mRef->mRefs++;
 	}
 
 	~Data()
 	{
-		delete [] mData;
+		mRef->mRefs--;
+
+		if (mRef->mRefs == 0)
+		{
+			delete [] mRef->mData;
+			delete mRef;
+		}
 	}
 
+	inline Data<value_type>& operator = (const Data& data)
+	{
+		mRef->mRefs--;
+
+		if (mRef->mRefs == 0)
+		{
+			delete[] mRef->mData;
+			delete mRef;
+		}
+
+		mRef = data.mRef;
+		mRef->mRefs++;
+
+		return *this;
+	}
+
+	// Size
 	inline size_type size() const
 	{
-		return mLinearSize;
+		return mRef->mLinearSize;
 	}
 
 	inline size_type linearSize() const
 	{
-		return mLinearSize;
+		return mRef->mLinearSize;
 	}
 
 	inline element_size_type elementSize() const
 	{
-		return mSize;
+		return mRef->mSize;
 	}
 
 	inline size_type dimension() const
 	{
-		return mSize.size();
+		return mRef->mSize.size();
 	}
 
 	inline bool isSingle() const
 	{
-		return mLinearSize == 1;
+		return mRef->mLinearSize == 1;
 	}
 
 	inline bool isVector() const
 	{
-		return mSize.size() == 1 && mSize.at(0) > 1;
+		return mRef->mSize.size() == 1 && mRef->mSize.at(0) > 1;
 	}
 
 	inline bool isMultidimensional() const
 	{
-		return mSize.size() > 1;
+		return mRef->mSize.size() > 1;
 	}
 
+	// Access
 	inline pointer ptr()
 	{
-		return mData;
+		return mRef->mData;
 	}
 
 	inline const_pointer ptr() const
 	{
-		return mData;
+		return mRef->mData;
 	}
 	
 	inline DataAccessor operator [] (size_type x) const
 	{
-		return DataAccessor(mData, mSize)[x];
+		return DataAccessor(mRef->mData, mRef->mSize)[x];
 	}
 
 	inline value_type at(const element_size_type& indexes) const
@@ -229,15 +267,15 @@ public:
 
 		for (size_type i = 0; i < indexes.size(); ++i)
 		{
-			index += indexes.at(i)*(i == 0 ? 1 : mSize.at(i - 1));
+			index += indexes.at(i)*(i == 0 ? 1 : mRef->mSize.at(i - 1));
 		}
 
-		return mData[index];
+		return mRef->mData[index];
 	}
 
 	inline value_type at (size_type i) const
 	{
-		return mData[i];
+		return mRef->mData[i];
 	}
 
 	inline void set(const element_size_type& indexes, const_reference val)
@@ -246,23 +284,24 @@ public:
 
 		for (size_type i = 0; i < indexes.size(); ++i)
 		{
-			index += indexes.at(i)*(i == 0 ? 1 : mSize.at(i - 1));
+			index += indexes.at(i)*(i == 0 ? 1 : mRef->mSize.at(i - 1));
 		}
 		
-		mData[index] = val;
+		mRef->mData[index] = val;
 	}
 
 	inline void set(size_type i, const_reference val)
 	{
-		mData[i] = val;
+		mRef->mData[i] = val;
 	}
 
 	inline value_type operator () () const
 	{
 		Q_ASSERT(isSingle());
-		return mData[0];
+		return mRef->mData[0];
 	}
 
+	// Utility
 	inline value_type max() const
 	{
 		value_type m = std::numeric_limits<value_type>::min();
@@ -283,14 +322,15 @@ public:
 		return m;
 	}
 
+	// Iterators
 	inline iterator begin()
 	{
-		return iterator(mData);
+		return iterator(mRef->mData);
 	}
 
 	inline const_iterator begin() const
 	{
-		return const_iterator(mData);
+		return const_iterator(mRef->mData);
 	}
 
 	inline const_iterator cbegin() const
@@ -300,21 +340,40 @@ public:
 
 	inline iterator end()
 	{
-		iterator itr(mData);
-		itr.mPos = mLinearSize;
+		iterator itr(mRef->mData);
+		itr.mPos = mRef->mLinearSize;
 		return itr;
 	}
 
 	inline const_iterator end() const
 	{
-		iterator itr(mData);
-		itr.mPos = mLinearSize;
+		iterator itr(mRef->mData);
+		itr.mPos = mRef->mLinearSize;
 		return itr;
 	}
 
 	inline const_iterator cend() const
 	{
 		return end();
+	}
+
+	// Union/Merge/Split
+	inline Data<value_type> split(const element_size_type& start, const element_size_type& end)
+	{
+		Q_ASSERT(start.size() == end.size());
+
+		element_size_type diff;
+		for (size_type i = 0; i < start.size(); ++i)
+		{
+			size_type d = end.at(i) - start.at(i);
+			Q_ASSERT(d != 0);
+
+			diff.push_back(d);
+		}
+
+		Data<value_type> newData(diff);
+
+		return newData;
 	}
 };
 

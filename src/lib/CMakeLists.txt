@@ -14,7 +14,9 @@ SET(PSL_ACTORS_Src
   ${PSL_Root}/actors/grid.cpp
   ${PSL_Root}/actors/gridbox.cpp
   ${PSL_Root}/actors/iactor.cpp
+  ${PSL_Root}/actors/line2d.cpp
   ${PSL_Root}/actors/mesh.cpp
+  ${PSL_Root}/actors/plot2d.cpp
   ${PSL_Root}/actors/rectangular.cpp
   ${PSL_Root}/actors/sphere.cpp)
 SOURCE_GROUP("Source Files\\Actors" FILES ${PSL_ACTORS_Src})
@@ -69,7 +71,9 @@ SET(PSL_ACTORS_Hdr
   ${PSL_Root}/actors/grid.h
   ${PSL_Root}/actors/gridbox.h
   ${PSL_Root}/actors/iactor.h
+  ${PSL_Root}/actors/line2d.h
   ${PSL_Root}/actors/mesh.h
+  ${PSL_Root}/actors/plot2d.h
   ${PSL_Root}/actors/rectangular.h
   ${PSL_Root}/actors/sphere.h)
 SOURCE_GROUP("Header Files\\Actors" FILES ${PSL_ACTORS_Hdr})

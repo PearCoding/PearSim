@@ -92,10 +92,10 @@ void Grid::build(size_t xc, size_t yc, float spacing, float hSpaceing)
 	const float min = mGrid->min();
 
 	qDebug() << sX << sY << max << min;
-	for(int y = 0; y < yc; ++y)
+	for (size_t y = 0; y < yc; ++y)
 	{
 		const float ty = y/(float)yc;
-		for(int x = 0; x < xc; ++x)
+		for (size_t x = 0; x < xc; ++x)
 		{
 			const float tx = x/(float)xc;
 			const int index = x*8+y*xc*8;
@@ -120,11 +120,11 @@ void Grid::build(size_t xc, size_t yc, float spacing, float hSpaceing)
 	mIndexData = new GLuint[mIndexCount];
 
 	int i = 0;
-	for(int y = 0; y < yc-1; ++y)
+	for (size_t y = 0; y < yc - 1; ++y)
 	{
 		if((y&1) == 0)
 		{
-			for(int x = 0; x < xc; ++x)
+			for (size_t x = 0; x < xc; ++x)
 			{
 				mIndexData[i++] = x + y*xc;
 				mIndexData[i++] = x + (y + 1)*xc;
@@ -132,7 +132,7 @@ void Grid::build(size_t xc, size_t yc, float spacing, float hSpaceing)
 		}
 		else
 		{
-			for(int x = xc-1; x > 0; --x)
+			for (size_t x = xc - 1; x > 0; --x)
 			{
 				mIndexData[i++] = x + (y + 1)*xc;
 				mIndexData[i++] = x - 1 + y*xc;

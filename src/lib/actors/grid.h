@@ -54,8 +54,8 @@ private:
 	int mFactorLoc;
 	int mHeightBoundaryLoc;
 
-	int mVertexCount;
-	int mIndexCount;
+	size_t mVertexCount;
+	size_t mIndexCount;
 	GLfloat* mVertexData;
 	GLuint* mIndexData;
 
