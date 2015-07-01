@@ -106,6 +106,10 @@ Poisson3D::Poisson3D() :
 	mGrid.setGradient(&mGradient);
 	mGrid.setGridFactor(DEFAULT_GRID_FACTOR);
 
+	mPlot.setGradient(&mGradient);
+	mPlot.setPosition(QVector3D(100, 400, 0));
+	mPlot.setScale(500);
+
 	mDataGrid = new FloatData(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE);
 	calculate();
 }
@@ -155,7 +159,9 @@ void Poisson3D::draw(Renderer* renderer)
 	mGrid.draw(&mCamera, nullptr);
 	renderer->endBackVisibility();
 
-	mPlot.draw(&mCamera, nullptr);
+	renderer->start2D();
+	mPlot.draw(&mHUDCamera, nullptr);
+	renderer->end2D();
 }
 
 void Poisson3D::resizeResources(int w, int h)
@@ -165,6 +171,10 @@ void Poisson3D::resizeResources(int w, int h)
 	QMatrix4x4 proj;
 	proj.perspective(60.0f, GLfloat(w) / h, 0.01f, 100.0f);
 	mCamera.setProjection(proj);
+
+	QMatrix4x4 orth;
+	orth.ortho(0, w, h, 0, -1, 1);
+	mHUDCamera.setProjection(orth);
 }
 
 void Poisson3D::initResources()
@@ -172,11 +182,14 @@ void Poisson3D::initResources()
 	ISimulation::initResources();
 
 	mCamera.setFocalPoint(QVector3D(0,0,0));
-	mCamera.setPosition(QVector3D(0,0.25f,-1));
+	mCamera.setPosition(QVector3D(0, 0.25f, -1));
+
+	mHUDCamera.setFocalPoint(QVector3D(0, 0, -1));
+	mHUDCamera.setPosition(QVector3D(0, 0, 0));
 
 	mGrid.build(mDataGrid, DEFAULT_GRID_SPACING, DEFAULT_GRID_HSPACING);
 
-	const size_t QUALITY = 64;
+	const size_t QUALITY = 32;
 	FloatData data(4, QUALITY);
 	for (FloatData::size_type i = 0; i < QUALITY; ++i)
 	{

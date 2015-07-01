@@ -51,6 +51,7 @@ private:
 	void calculate();
 
 	Camera mCamera;
+	Camera mHUDCamera;
 
 	EmptyActor mRootActor;
 	Grid mGrid;

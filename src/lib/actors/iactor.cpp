@@ -42,7 +42,7 @@ QVector3D IActor::position() const
         transform.rotate(rot.x(), 1, 0, 0);
         transform.rotate(rot.y(), 0, 1, 0);
         transform.rotate(rot.z(), 0, 0, 1);
-        transform.scale(mParent->scale());
+        //transform.scale(mParent->scale());
 
         return mParent->position() + transform * mPosition;
     }
@@ -121,8 +121,8 @@ void IActor::cache()
     m.rotate(mRotation.x(), 1, 0, 0);
     m.rotate(mRotation.y(), 0, 1, 0);
     m.rotate(mRotation.z(), 0, 0, 1);
-    m.scale(mScale);
     m.translate(mPosition);
+    m.scale(mScale);
 
     mMatrix = m;
 }

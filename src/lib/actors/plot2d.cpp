@@ -24,7 +24,7 @@ void Plot2D::build(const FloatData& plots)
 		if (mGradient)
 		{
 			QVector4D col = mGradient->value((i + 1) / (float)(plotcount));
-			line->setColor(QColor(col.x() * 255, col.y() * 255, col.z() * 255, col.w() * 255));
+			line->setColor(QColor(col.x(), col.y(), col.z(), col.w()));
 		}
 
 		FloatData data = plots.split({ i * 2, 0 }, { i * 2 + 1, datacount - 1 });
