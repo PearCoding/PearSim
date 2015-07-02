@@ -1,7 +1,7 @@
 #include "isimulation.h"
 
 ISimulation::ISimulation() :
-    QOpenGLFunctions()
+	QObject()
 {
 
 }
@@ -13,12 +13,12 @@ ISimulation::~ISimulation()
 
 IInteractor* ISimulation::interactor()
 {
-    return nullptr;
+	return nullptr;
 }
 
 PropertyTable* ISimulation::properties()
 {
-    return nullptr;
+	return nullptr;
 }
 
 void ISimulation::draw(Renderer*)
@@ -33,7 +33,6 @@ void ISimulation::resizeResources(int, int)
 
 void ISimulation::initResources()
 {
-    initializeOpenGLFunctions();
 }
 
 void ISimulation::cleanResources()

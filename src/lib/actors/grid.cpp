@@ -47,7 +47,8 @@ static const char *fragmentShaderSourceCore =
 		"uniform float factor;\n"
 		"void main() {\n"
 		"   float t = (texture(heightMap, Tex).r-heightBoundary.x)/(heightBoundary.y - heightBoundary.x);\n"
-		"   fragColor = factor*texture(gradientMap, t);\n"
+		"   vec4 color = texture(gradientMap, t);\n"
+		"   fragColor = vec4(factor*color.rgb, color.a);\n"
 		"}\n";
 
 void Grid::build(FloatData* grid, float spacing, float hSpaceing)

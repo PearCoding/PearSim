@@ -1,7 +1,7 @@
 #pragma once
 
 #include "config.h"
-#include <QOpenGLFunctions>
+#include <QObject>
 
 enum SimulationFlags
 {
@@ -12,7 +12,7 @@ enum SimulationFlags
 class IInteractor;
 class PropertyTable;
 class Renderer;
-class PS_LIB ISimulation : public QObject, protected QOpenGLFunctions
+class PS_LIB ISimulation : public QObject
 {
 	Q_OBJECT
 public:

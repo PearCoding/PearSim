@@ -91,7 +91,7 @@ void MainWindow::openSimulation(ISimulation* sim)
 
 void MainWindow::makeScreenshot()
 {
-	QImage image = ui->simulationView->grabFramebuffer();
+	QImage image = ui->simulationView->makeScreenshot();
 
 	QString path = QFileDialog::getSaveFileName(this, tr("Save screenshot to.."),
 												QStandardPaths::writableLocation(QStandardPaths::PicturesLocation),
