@@ -55,6 +55,10 @@ void DataTest::size()
 			QCOMPARE((int)data.elementSize()[2], depth);
 		}
 	}
+
+	QCOMPARE(data.isSingle(), size == 1);
+	QCOMPARE(data.isVector(), size > 1 && dimension == 1);
+	QCOMPARE(data.isMultidimensional(), dimension > 1);
 }
 
 QTEST_APPLESS_MAIN(DataTest)
