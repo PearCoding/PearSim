@@ -170,11 +170,12 @@ public:
 
 		for (element_size_type::iterator it = mRef->mSize.begin();
 			it != mRef->mSize.end();
-			++it)
+			)
 		{
 			if (*it != 0)
 			{
 				mRef->mLinearSize *= *it;
+				++it;
 			}
 			else
 			{

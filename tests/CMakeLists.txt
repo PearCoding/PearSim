@@ -18,3 +18,4 @@ FUNCTION(PUSH_TEST name files)
 ENDFUNCTION(PUSH_TEST)
 
 PUSH_TEST(Gradient gradient_test.cpp)
+PUSH_TEST(Data data_test.cpp)
