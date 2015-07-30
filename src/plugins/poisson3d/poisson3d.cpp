@@ -12,6 +12,8 @@
 
 #include "properties/textproperty.h"
 
+#include "math/interpolation/newton.h"
+
 const int DEFAULT_GRID_SIZE = 100;
 const float DEFAULT_GRID_FACTOR = 0.6f;
 const float DEFAULT_GRID_SPACING = 0.05f;
@@ -112,6 +114,16 @@ Poisson3D::Poisson3D() :
 
 	mDataGrid = new FloatData(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE);
 	calculate();
+
+	Data<double> start(1);
+	start.set(0, 1);
+
+	Data<double> z = newton_zero(start,
+		[](Data<double>v) {Data<double> ret(1); ret.set(0, sin(v.at(0))); return ret; },
+		[](Data<double>v) {Data<double> ret(1); ret.set(0, cos(v.at(0))); return ret; },
+		0.000001);
+
+	qDebug() << z.at(0);
 }
 
 Poisson3D::~Poisson3D()

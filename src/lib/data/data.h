@@ -49,7 +49,7 @@ public:
 	public:
 		inline DataAccessor& operator [] (size_type x)
 		{
-			Q_ASSERT(mValues.size() != mData->size().size());
+			Q_ASSERT(mValues.size() != mData->elementSize().size());
 
 			mValues.push_back(x);//Reverse order
 			return *this;
@@ -57,7 +57,7 @@ public:
 
 		//inline const DataAccessor& operator [] (size_type x) const
 		//{
-		//	Q_ASSERT(mValues.size() != mData->size().size());
+		//	Q_ASSERT(mValues.size() != mData->elementSize().size());
 
 		//	mValues.push_back(x);//Reverse order
 		//	return *this;
@@ -65,13 +65,13 @@ public:
 
 		inline value_type operator() () const
 		{
-			Q_ASSERT(mValues.size() == mData->size().size());
+			Q_ASSERT(mValues.size() == mData->elementSize().size());
 			return mData->at(mValues);
 		}
 
 		inline DataAccessor& operator = (value_type val)
 		{
-			Q_ASSERT(mValues.size() == mData->size().size());
+			Q_ASSERT(mValues.size() == mData->elementSize().size());
 			mData->set(mValues, val);
 			return *this;
 		}
@@ -262,6 +262,12 @@ public:
 		return mRef->mSize.size() > 1;
 	}
 
+	inline bool hasSameStructure(const Data<T>& ref) const
+	{
+		return ref.dimension() == dimension() &&
+			ref.linearSize() == linearSize();
+	}
+
 	inline void trim()
 	{
 		element_size_type newSize;
@@ -351,6 +357,16 @@ public:
 			m = t < m ? t : m;
 		}
 		return m;
+	}
+
+	inline Data<value_type> abs() const
+	{
+		Data<value_type> newData = *this;
+		for (size_type i = 0; i < newData.linearSize(); ++i)
+		{
+			newData.set(i, newData.at(i) < 0 ? -newData.at(i) : newData.at(i));
+		}
+		return newData;
 	}
 
 	// Iterators

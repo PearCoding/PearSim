@@ -78,7 +78,8 @@ SET(PSL_ACTORS_Hdr
   ${PSL_Root}/actors/sphere.h)
 SOURCE_GROUP("Header Files\\Actors" FILES ${PSL_ACTORS_Hdr})
 SET(PSL_DATA_Hdr
-  ${PSL_Root}/data/data.h)
+  ${PSL_Root}/data/data.h
+  ${PSL_Root}/data/data_utils.h)
 SOURCE_GROUP("Header Files\\Data" FILES ${PSL_DATA_Hdr})
 SET(PSL_INTERACTORS_Hdr
   ${PSL_Root}/interactors/actorinteractor.h
@@ -89,6 +90,9 @@ SET(PSL_LOADER_Hdr
   ${PSL_Root}/loader/meshloader.h
   ${PSL_Root}/loader/wavefrontloader.h)
 SOURCE_GROUP("Header Files\\Loader" FILES ${PSL_LOADER_Hdr})
+SET(PSL_MATH_INTERPOLATION_Hdr
+  ${PSL_Root}/math/interpolation/newton.h)
+SOURCE_GROUP("Header Files\\Math\\Interpolation" FILES ${PSL_MATH_INTERPOLATION_Hdr})
 SET(PSL_PLUGIN_Hdr
   ${PSL_Root}/plugin/iplugin.h
   ${PSL_Root}/plugin/plugin.h
@@ -123,6 +127,7 @@ SET(PSL_Hdr
   ${PSL_MAIN_Hdr} ${PSL_ACTORS_Hdr} ${PSL_DATA_Hdr} ${PSL_INTERACTORS_Hdr}
   ${PSL_LOADER_Hdr} ${PSL_PROPERTIES_Hdr} ${PSL_RENDERER_Hdr}
   ${PSL_SIMS_Hdr} ${PSL_UTILS_Hdr} ${PSL_PLUGIN_Hdr}
+  ${PSL_MATH_INTERPOLATION_Hdr}
 )
 
 QT5_WRAP_CPP(PSL_Hdr_Moc ${PSL_Hdr})
