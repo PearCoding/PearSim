@@ -415,7 +415,6 @@ public:
 			newData.set(i, at(oldIndexes));
 		}
 
-		newData.trim();
 		return newData;
 	}
 

@@ -213,6 +213,7 @@ void DataTest::split()
 	QCOMPARE(data2.at({ 3, 3 }), 5.0f);
 
 	Data<float> data3 = data.split({ 5, 2 }, { 5, 6 });
+	data3.trim();
 	QCOMPARE((int)data3.dimension(), 1);
 	QCOMPARE(data3.at({ 3 }), 5.0f);
 }
