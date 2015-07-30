@@ -36,60 +36,54 @@ public:
 
 	class DataAccessor
 	{
+		friend Data<T>;
 	private:
-		pointer mData;
-		element_size_type mSize;
+		Data<T>* mData;
 		mutable element_size_type mValues;
 
-		DataAccessor(pointer data, const element_size_type& size) :
-			mData(data), mSize(size)
+		DataAccessor(Data<T>* data) :
+			mData(data)
 		{
 		}
 
-		inline DataAccessor& operator [] (size_type x) const
+	public:
+		inline DataAccessor& operator [] (size_type x)
 		{
-			Q_ASSERT(mValues.size() != mSize.size());
+			Q_ASSERT(mValues.size() != mData->size().size());
 
 			mValues.push_back(x);//Reverse order
 			return *this;
 		}
 
+		//inline const DataAccessor& operator [] (size_type x) const
+		//{
+		//	Q_ASSERT(mValues.size() != mData->size().size());
+
+		//	mValues.push_back(x);//Reverse order
+		//	return *this;
+		//}
+
 		inline value_type operator() () const
 		{
-			Q_ASSERT(mValues.size() == mSize.size());
-
-			size_t index = 0;
-
-			for (size_t i = 0; i < mValues.size(); ++i)
-			{
-				index += mValues.at(i)*(i == 0 ? 1 : mSize.at(i - 1));
-			}
-
-			return mData[index];
+			Q_ASSERT(mValues.size() == mData->size().size());
+			return mData->at(mValues);
 		}
 
 		inline DataAccessor& operator = (value_type val)
 		{
-			Q_ASSERT(mValues.size() == mSize.size());
-
-			size_t index = 0;
-
-			for (size_t i = 0; i < mValues.size(); ++i)
-			{
-				index += mValues.at(i)*(i == 0 ? 1 : mSize.at(i - 1));
-			}
-
-			mData[index] = val;
+			Q_ASSERT(mValues.size() == mData->size().size());
+			mData->set(mValues, val);
+			return *this;
 		}
 	};
 
 	//TODO: Can be std::random_access_iterator_tag
 	class DataIterator : public std::iterator<std::bidirectional_iterator_tag, value_type>
 	{
-		friend Data;
+		friend Data<T>;
 	private:
-		pointer mData;
-		size_type mPos;
+		Data<T>* mData;
+		mutable size_type mPos;
 
 	public:
 		DataIterator() :
@@ -97,7 +91,7 @@ public:
 		{
 		}
 
-		DataIterator(pointer data) :
+		DataIterator(Data<T>* data) :
 			mData(data), mPos(0)
 		{
 		}
@@ -111,7 +105,12 @@ public:
 			++mPos; return *this;
 		}
 
-		inline DataIterator operator++(int)
+		inline const DataIterator& operator++() const
+		{
+			++mPos; return *this;
+		}
+
+		inline DataIterator operator++(int) const
 		{
 			DataIterator tmp(*this); operator++(); return tmp;
 		}
@@ -121,7 +120,12 @@ public:
 			--mPos; return *this;
 		}
 
-		inline DataIterator operator--(int)
+		inline const DataIterator& operator--() const
+		{
+			--mPos; return *this;
+		}
+
+		inline DataIterator operator--(int) const
 		{
 			DataIterator tmp(*this); operator--(); return tmp;
 		}
@@ -138,12 +142,7 @@ public:
 
 		inline value_type operator*() const
 		{
-			return mData[mPos];
-		}
-
-		inline reference operator*()
-		{
-			return mData[mPos];
+			return mData->at(mPos);
 		}
 	};
 
@@ -263,8 +262,34 @@ public:
 		return mRef->mSize.size() > 1;
 	}
 
+	inline void trim()
+	{
+		element_size_type newSize;
+
+		for (element_size_type::iterator it = mRef->mSize.begin();
+			it != mRef->mSize.end();
+			++it)
+		{
+			if (*it != 1)
+			{
+				newSize.push_back(*it);
+			}
+		}
+
+		if (newSize.empty())
+		{
+			newSize.push_back(1);
+		}
+
+		if (newSize.size() != mRef->mSize.size())
+		{
+			makeSingle();
+			mRef->mSize = newSize;
+		}
+	}
+
 	// Access
-	inline pointer ptr()
+	inline pointer ptr()//Attention: No reference handling!
 	{
 		return mRef->mData;
 	}
@@ -273,10 +298,10 @@ public:
 	{
 		return mRef->mData;
 	}
-	
-	inline DataAccessor operator [] (size_type x) const
+
+	inline DataAccessor operator [] (size_type x)
 	{
-		return DataAccessor(mRef->mData, mRef->mSize)[x];
+		return DataAccessor(this)[x];
 	}
 
 	inline value_type at(const element_size_type& indexes) const
@@ -291,11 +316,13 @@ public:
 
 	inline void set(const element_size_type& indexes, const_reference val)
 	{		
+		makeSingle();
 		mRef->mData[toLinear(indexes)] = val;
 	}
 
 	inline void set(size_type i, const_reference val)
 	{
+		makeSingle();
 		mRef->mData[i] = val;
 	}
 
@@ -329,12 +356,12 @@ public:
 	// Iterators
 	inline iterator begin()
 	{
-		return iterator(mRef->mData);
+		return iterator(this);
 	}
 
 	inline const_iterator begin() const
 	{
-		return const_iterator(mRef->mData);
+		return const_iterator(const_cast<Data<T>*>(this));
 	}
 
 	inline const_iterator cbegin() const
@@ -344,14 +371,14 @@ public:
 
 	inline iterator end()
 	{
-		iterator itr(mRef->mData);
+		iterator itr(this);
 		itr.mPos = mRef->mLinearSize;
 		return itr;
 	}
 
 	inline const_iterator end() const
 	{
-		iterator itr(mRef->mData);
+		iterator itr(const_cast<Data<T>*>(this));
 		itr.mPos = mRef->mLinearSize;
 		return itr;
 	}
@@ -370,7 +397,7 @@ public:
 		for (size_type i = 0; i < start.size(); ++i)
 		{
 			size_type d = end.at(i) - start.at(i) + 1;
-			Q_ASSERT(d != 0);
+			Q_ASSERT(d > 0);
 			diff.push_back(d);
 		}
 
@@ -388,9 +415,11 @@ public:
 			newData.set(i, at(oldIndexes));
 		}
 
+		newData.trim();
 		return newData;
 	}
 
+	// Access utils
 	inline size_type toLinear(const element_size_type& indexes) const
 	{
 		size_type index = 0;
@@ -410,6 +439,24 @@ public:
 			index /= mRef->mSize.at(i);
 		}
 		return indexes;
+	}
+
+	void makeSingle()
+	{
+		if (mRef->mRefs > 1)
+		{
+			mRef->mRefs--;
+
+			InternalData* newRef = new InternalData;
+			newRef->mLinearSize = mRef->mLinearSize;
+			newRef->mSize = mRef->mSize;
+			newRef->mRefs = 1;
+
+			newRef->mData = new value_type[newRef->mLinearSize];
+			memcpy(newRef->mData, mRef->mData, sizeof(value_type)*newRef->mLinearSize);
+
+			mRef = newRef;
+		}
 	}
 };
 
