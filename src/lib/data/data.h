@@ -3,6 +3,15 @@
 #include "config.h"
 #include <limits>
 
+/**
+ * @brief	A general multidimensional data container.
+ *
+ * @author	PearCoding
+ * @date	31.07.2015
+ *
+ * @tparam	T	Base value type.
+ */
+
 template<typename T>
 class PS_LIB_INLINE Data
 {
@@ -10,15 +19,54 @@ public:
 	class DataIterator;
 	class DataAccessor;
 
+	/**
+	 * @brief	Defines an alias representing type of the value.
+	 */
 	typedef T value_type;
+
+	/**
+	 * @brief	Defines an alias representing the reference.
+	 */
 	typedef value_type& reference;
+
+	/**
+	 * @brief	Defines an alias representing the constant reference.
+	 */
 	typedef const value_type& const_reference;
+
+	/**
+	 * @brief	Defines an alias representing a pointer to value_type.
+	 */
 	typedef value_type* pointer;
+
+	/**
+	 * @brief	Defines an alias representing a constant pointer to value_type.
+	 */
 	typedef const value_type* const_pointer;
+
+	/**
+	 * @brief	Defines an alias representing the iterator.
+	 */
 	typedef DataIterator iterator;
+
+	/**
+	 * @brief	Defines an alias representing the constant iterator.
+	 */
 	typedef const DataIterator const_iterator;
+
+	/**
+	 * @brief	Defines an alias representing type of the difference.
+	 */
 	typedef ptrdiff_t difference_type;
+
+	/**
+	 * @brief	Defines an alias representing type of the size.
+	 */
 	typedef size_t size_type;
+
+	/**
+	 * @brief	Defines an alias representing type of the element size.
+	 */
 	typedef std::vector<size_type> element_size_type;
 
 private:
@@ -29,11 +77,16 @@ private:
 		value_type* mData;
 		size_type mRefs;
 	};
-
 	InternalData* mRef;
 
 public:
 
+	/**
+	 * @brief	A proxy for data access and manipulation.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 */
 	class DataAccessor
 	{
 		friend Data<T>;
@@ -47,6 +100,17 @@ public:
 		}
 
 	public:
+
+		/**
+		 * @brief	Index operator which crawls one deeper into the dimension.
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @param	x	The index at the current dimension.
+		 *
+		 * @return	DataAccessor which can be used to gain access and crawl deeper.
+		 */
 		inline DataAccessor& operator [] (size_type x)
 		{
 			Q_ASSERT(mValues.size() != mData->elementSize().size());
@@ -63,11 +127,33 @@ public:
 		//	return *this;
 		//}
 
+		/**
+		 * @brief	Return value from the current index.
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @attention	Index should be at the last dimension!
+		 * 				
+		 * @return	The value at the current index.
+		 */
 		inline value_type operator() () const
 		{
 			Q_ASSERT(mValues.size() == mData->elementSize().size());
 			return mData->at(mValues);
 		}
+
+		/**
+		 * @brief	Assign value to the current index.
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @attention	Index should be at the last dimension!
+		 * 				
+		 * @param	val	The new value.
+		 * @return	This object.
+		 */
 
 		inline DataAccessor& operator = (value_type val)
 		{
@@ -77,7 +163,15 @@ public:
 		}
 	};
 
-	//TODO: Can be std::random_access_iterator_tag
+
+	/**
+	 * @brief	The general iterator class for Data.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 * 			
+	 * @todo	Can be std::random_access_iterator_tag
+	 */
 	class DataIterator : public std::iterator<std::bidirectional_iterator_tag, value_type>
 	{
 		friend Data<T>;
@@ -86,77 +180,196 @@ public:
 		mutable size_type mPos;
 
 	public:
-		DataIterator() :
-			mData(nullptr), mPos(0)
-		{
-		}
+
+		/**
+		 * @brief	Creates iterator and points at first element.
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @param	data	Underlying data instance
+		 */
 
 		DataIterator(Data<T>* data) :
 			mData(data), mPos(0)
 		{
 		}
 
-		DataIterator(const DataIterator& itr) : mData(itr.mData), mPos(itr.mPos)
+		/**
+		 * @brief	Copy constructor.
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @param	itr	The itr.
+		 */
+		DataIterator(const DataIterator& itr) :
+			mData(itr.mData), mPos(itr.mPos)
 		{
 		}
 
+		/**
+		 * @brief	Walking to next element.
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @return	This object.
+		 */
 		inline DataIterator& operator++()
 		{
 			++mPos; return *this;
 		}
 
+		/**
+		* @brief	Walking to next element.
+		*
+		* @author	PearCoding
+		* @date		31.07.2015
+		*
+		* @return	This object.
+		*/
 		inline const DataIterator& operator++() const
 		{
 			++mPos; return *this;
 		}
 
+		/**
+		* @brief	Walking to next element.
+		*
+		* @author	PearCoding
+		* @date		31.07.2015
+		*
+		* @return	Copy of iterator before the increment.
+		*/
 		inline DataIterator operator++(int) const
 		{
 			DataIterator tmp(*this); operator++(); return tmp;
 		}
 
+		/**
+		* @brief	Walking to previous element.
+		*
+		* @author	PearCoding
+		* @date		31.07.2015
+		*
+		* @return	This object.
+		*/
 		inline DataIterator& operator--()
 		{
 			--mPos; return *this;
 		}
 
+		/**
+		* @brief	Walking to previous element.
+		*
+		* @author	PearCoding
+		* @date		31.07.2015
+		*
+		* @return	This object.
+		*/
 		inline const DataIterator& operator--() const
 		{
 			--mPos; return *this;
 		}
 
+		/**
+		* @brief	Walking to previous element.
+		*
+		* @author	PearCoding
+		* @date		31.07.2015
+		*
+		* @return	Copy of iterator before the increment.
+		*/
 		inline DataIterator operator--(int) const
 		{
 			DataIterator tmp(*this); operator--(); return tmp;
 		}
 
+		/**
+		 * @brief	Equality operator.
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @param	rhs	The right hand side iterator.
+		 *
+		 * @return	true if the iterators are considered equivalent.
+		 */
 		inline bool operator == (const DataIterator& rhs) const
 		{
 			return mData == rhs.mData && mPos == rhs.mPos;
 		}
 
+		/**
+		 * @brief	Inequality operator.
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @param	rhs	The right hand side iterator.
+		 *
+		 * @return	true if the iterators are not considered equivalent.
+		 */
 		inline bool operator != (const DataIterator& rhs) const
 		{
 			return !(*this == rhs);
 		}
 
+		/**
+		 * @brief	Dereferencing operator
+		 *
+		 * @author	PearCoding
+		 * @date	31.07.2015
+		 *
+		 * @return	The value of the current pointed element.
+		 */
 		inline value_type operator*() const
 		{
 			return mData->at(mPos);
 		}
 	};
 
-	// Constructors
+	/**
+	 * @brief	Creates object with given dimensional sizes (up to 3D)
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @param	w	The size of the first dimension.
+	 * @param	h	The size of the second dimension.
+	 * @param	d	The size of the third dimension.
+	 */
 	Data(size_type w = 1, size_type h = 0, size_type d = 0) :
 		Data({ w, h, d})
 	{
 	}
 
+	/**
+	 * @brief	Creates object with given dimensional size list
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @param	size	List of sizes (per dimension).
+	 * 					Elements equal zero are skipped.
+	* 					One element must be non-zero.
+	 */
 	Data(std::initializer_list<size_type> size) :
 		Data(element_size_type(size))
 	{
 	}
 
+	/**
+	* @brief	Creates object with given dimensional size list
+	*
+	* @author	PearCoding
+	* @date		31.07.2015
+	*
+	* @param	size	List of sizes (per dimension).
+	* 					Elements equal zero are skipped.
+	* 					One element must be non-zero.
+	*/
 	Data(const element_size_type& size) :
 		mRef(nullptr)
 	{
@@ -193,12 +406,28 @@ public:
 		memset(mRef->mData, 0, sizeof(value_type)*mRef->mLinearSize);
 	}
 
+	/**
+	 * @brief	Copy constructor. Based on Copy on Write design.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @param	data	The referenced object
+	 */
 	Data(const Data& data) :
 		mRef(data.mRef)
 	{
 		mRef->mRefs++;
 	}
 
+	/**
+	 * @brief	Destructor.
+	 * 			
+	 * Dereference data and deletes it when needed.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 */
 	~Data()
 	{
 		mRef->mRefs--;
@@ -210,6 +439,16 @@ public:
 		}
 	}
 
+	/**
+	 * @brief	Assignment operator.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @param	data	The data.
+	 *
+	 * @return	This object.
+	 */
 	inline Data<value_type>& operator = (const Data& data)
 	{
 		mRef->mRefs--;
@@ -226,48 +465,137 @@ public:
 		return *this;
 	}
 
-	// Size
+	/** @name Structure
+	 *  Operations only working with the structure of the data container.
+	 */
+	///@{
+	
+	/**
+	 * @brief	Returns the linear size of the container.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @return	Linear size of the container.
+	 * @see		linearSize()
+	 */
 	inline size_type size() const
 	{
 		return mRef->mLinearSize;
 	}
 
+	/**
+	* @brief	Returns the linear size of the container.
+	*
+	* @author	PearCoding
+	* @date		31.07.2015
+	*
+	* @return	Linear size of the container.
+	* @see		size()
+	*/
 	inline size_type linearSize() const
 	{
 		return mRef->mLinearSize;
 	}
+
+	/**
+	 * @brief	Returns the list of size per dimension
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @return	List of sizes
+	 */
 
 	inline element_size_type elementSize() const
 	{
 		return mRef->mSize;
 	}
 
+	/**
+	 * @brief	Gets the dimension of the container.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @return	The dimension.
+	 */
 	inline size_type dimension() const
 	{
 		return mRef->mSize.size();
 	}
 
+	/**
+	 * @brief	Checks if container contains only one single element.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @return	true if only one element, false if not.
+	 */
 	inline bool isSingle() const
 	{
 		return mRef->mLinearSize == 1;
 	}
 
+	/**
+	 * @brief	Checks if the object is vector sized.
+	 * 			
+	 * Vector structure is defined as dimension() == 1 and size() > 1
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @return	true if has vector structure, false if not.
+	 */
 	inline bool isVector() const
 	{
 		return mRef->mSize.size() == 1 && mRef->mSize.at(0) > 1;
 	}
 
+	/**
+	 * @brief	Checks if the object is multidimensional
+	 *
+	 * Multidimensional is dimension() > 1. 
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @return	true if multidimensional, false if not.
+	 */
 	inline bool isMultidimensional() const
 	{
 		return mRef->mSize.size() > 1;
 	}
 
+	/**
+	 * @brief	Checks if 'ref' has the same structure.
+	 *
+	 * Same structure is reached if 'ref' has same dimension
+	 * and same size. 
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @param	ref	The reference data container.
+	 *
+	 * @return	true if same structure, false if not.
+	 */
 	inline bool hasSameStructure(const Data<T>& ref) const
 	{
 		return ref.dimension() == dimension() &&
 			ref.linearSize() == linearSize();
 	}
 
+	/**
+	 * @brief	Removes single sized dimensions.
+	 *  
+	 *  Dimensions which are single sized will be removed. Object can not be empty after this
+	 *  operation.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 */
 	inline void trim()
 	{
 		element_size_type newSize;
@@ -293,13 +621,38 @@ public:
 			mRef->mSize = newSize;
 		}
 	}
+	///@}
 
-	// Access
-	inline pointer ptr()//Attention: No reference handling!
+	/** @name Access
+	 *  Operations working on elements of the container and their values.
+	 */
+	///@{
+	
+	/**
+	 * @brief	Returns pointer to internal data array.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @attention	No reference handling will be provided. Use makeSingle() when needed.
+	 *
+	 * @return	A pointer to internal data array.
+	 * 			
+	 * @see makeSingle()
+	 */
+	inline pointer ptr()
 	{
 		return mRef->mData;
 	}
 
+	/**
+	 * @brief	Returns const pointer to internal data array.
+	 *
+	 * @author	PearCoding
+	 * @date	31.07.2015
+	 *
+	 * @return	A const pointer to internal data array.
+	 */
 	inline const_pointer ptr() const
 	{
 		return mRef->mData;
@@ -337,8 +690,12 @@ public:
 		Q_ASSERT(isSingle());
 		return mRef->mData[0];
 	}
+	///@}
 
-	// Utility
+	/** @name Utility
+	 *  Some utility operations.
+	 */
+	///@{
 	inline value_type max() const
 	{
 		value_type m = std::numeric_limits<value_type>::min();
@@ -368,8 +725,12 @@ public:
 		}
 		return newData;
 	}
+	///@}
 
-	// Iterators
+	/** @name Iterators
+	 *  Operations only working with iterators.
+	 */
+	///@{
 	inline iterator begin()
 	{
 		return iterator(this);
@@ -404,7 +765,12 @@ public:
 		return end();
 	}
 
-	// Union/Merge/Split
+	///@}
+
+	/** @name Set-Operations
+	 *  Math based set operations.
+	 */
+	///@{
 	inline Data<value_type> split(const element_size_type& start, const element_size_type& end) const
 	{
 		Q_ASSERT(start.size() == end.size());
@@ -434,7 +800,12 @@ public:
 		return newData;
 	}
 
-	// Access utils
+	///@}
+
+	/** @name Index
+	 *  Operations working with the index scheme of the data container.
+	 */
+	///@{
 	inline size_type toLinear(const element_size_type& indexes) const
 	{
 		size_type index = 0;
@@ -456,6 +827,12 @@ public:
 		return indexes;
 	}
 
+	///@}
+
+	/** @name Referencing
+	*  Operations working with the referencing mechanism.
+	*/
+	///@{
 	void makeSingle()
 	{
 		if (mRef->mRefs > 1)
@@ -473,7 +850,20 @@ public:
 			mRef = newRef;
 		}
 	}
+	///@}
 };
 
+/**
+ * @brief	Defines an alias based on float as base value type.
+ */
 typedef Data<float> FloatData;
+
+/**
+* @brief	Defines an alias based on double as base value type.
+*/
+typedef Data<double> DoubleData;
+
+/**
+ * @brief	Defines an alias based on int as base value type.
+ */
 typedef Data<int> IntData;
