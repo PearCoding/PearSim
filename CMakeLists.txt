@@ -45,6 +45,8 @@ find_package(Qt5Test)
 find_package(OpenGL REQUIRED)
 find_package(OpenCL)
 
+find_package(Doxygen)
+
 MESSAGE(STATUS "Using Qt: ${Qt5Widgets_VERSION_STRING}")
 
 #DEFINITIONS AND FLAGS
@@ -77,3 +79,11 @@ add_subdirectory(${PS_Root}/plugins)
 IF(Qt5Test_FOUND)
 	add_subdirectory(${PS_Root}/../tests)
 ENDIF()
+
+if(DOXYGEN_FOUND)
+	add_custom_target(doc
+		${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile
+		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+		COMMENT "Generating API documentation with Doxygen" VERBATIM
+	)
+endif(DOXYGEN_FOUND)
