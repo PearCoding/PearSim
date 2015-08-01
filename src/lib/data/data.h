@@ -571,7 +571,7 @@ public:
 	/**
 	 * @brief	Checks if 'ref' has the same structure.
 	 *
-	 * Same structure is reached if 'ref' has same dimension
+	 * Same structure is achieved when 'ref' has same dimension
 	 * and same size. 
 	 *
 	 * @author	PearCoding
@@ -634,7 +634,7 @@ public:
 	 * @author	PearCoding
 	 * @date	31.07.2015
 	 *
-	 * @attention	No reference handling will be provided. Use makeSingle() when needed.
+	 * @attention	No reference handling provided. Use makeSingle() when needed.
 	 *
 	 * @return	A pointer to internal data array.
 	 * 			
@@ -658,33 +658,91 @@ public:
 		return mRef->mData;
 	}
 
+	/**
+	 * @brief	Returns DataAccessor for the index at the first dimension.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @param	x	Index at the first dimension.
+	 *
+	 * @return	DataAccessor with first dimension set.
+	 */
 	inline DataAccessor operator [] (size_type x)
 	{
 		return DataAccessor(this)[x];
 	}
 
+	/**
+	 * @brief	Returns value from full list of indexes.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @param	indexes	The given indexes per dimension.
+	 *
+	 * @return	Value at the given index.
+	 */
 	inline value_type at(const element_size_type& indexes) const
 	{
 		return mRef->mData[toLinear(indexes)];
 	}
 
+	/**
+	 * @brief	Returns value from linear index.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @param	i	Linear index.
+	 *
+	 * @return	Value at the given index.
+	 */
 	inline value_type at (size_type i) const
 	{
 		return mRef->mData[i];
 	}
 
+	/**
+	 * @brief	Sets value at given index list.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @param	indexes	The given indexes per dimension.
+	 * @param	val	   	The new value.
+	 */
 	inline void set(const element_size_type& indexes, const_reference val)
 	{		
 		makeSingle();
 		mRef->mData[toLinear(indexes)] = val;
 	}
 
+	/**
+	 * @brief	Sets value at given index.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @param	i  	Linear index.
+	 * @param	val	The new value.
+	 */
 	inline void set(size_type i, const_reference val)
 	{
 		makeSingle();
 		mRef->mData[i] = val;
 	}
 
+	/**
+	 * @brief	Returns value when single structured.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @attention	Data has to be single structured.
+	 * @return	Value at index 0.
+	 * @see		isSingle()
+	 */
 	inline value_type operator () () const
 	{
 		Q_ASSERT(isSingle());
@@ -695,7 +753,16 @@ public:
 	/** @name Utility
 	 *  Some utility operations.
 	 */
-	///@{
+
+	///@{.
+	/**
+	 * @brief	Determines the maximum value.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @return	The maximum value.
+	 */
 	inline value_type max() const
 	{
 		value_type m = std::numeric_limits<value_type>::min();
@@ -706,6 +773,14 @@ public:
 		return m;
 	}
 
+	/**
+	 * @brief	Determines the minimum value.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @return	The minimum value.
+	 */
 	inline value_type min() const
 	{
 		value_type m = std::numeric_limits<value_type>::max();
@@ -715,6 +790,15 @@ public:
 		}
 		return m;
 	}
+
+	/**
+	 * @brief	Calculates the absolute values.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @return	New data container with all values >= 0.
+	 */
 
 	inline Data<value_type> abs() const
 	{
@@ -731,21 +815,54 @@ public:
 	 *  Operations only working with iterators.
 	 */
 	///@{
+	
+	/**
+	 * @brief	Return iterator to beginning
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @return	An iterator pointing at the first element.
+	 */
 	inline iterator begin()
 	{
 		return iterator(this);
 	}
 
+	/**
+	 * @brief	Return const_iterator to beginning.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @return	An const_iterator pointing at the first element.
+	 */
 	inline const_iterator begin() const
 	{
 		return const_iterator(const_cast<Data<T>*>(this));
 	}
 
+	/**
+	 * @brief	Return const_iterator to beginning.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @return	An const_iterator pointing at the first element.
+	 */
 	inline const_iterator cbegin() const
 	{
 		return begin();
 	}
 
+	/**
+	 * @brief	Return iterator to end.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @return	An iterator pointing after the last element.
+	 */
 	inline iterator end()
 	{
 		iterator itr(this);
@@ -753,6 +870,14 @@ public:
 		return itr;
 	}
 
+	/**
+	* @brief	Return const_iterator to end.
+	*
+	* @author	PearCoding
+	* @date		02.08.2015
+	*
+	* @return	An const_iterator pointing after the last element.
+	*/
 	inline const_iterator end() const
 	{
 		iterator itr(const_cast<Data<T>*>(this));
@@ -760,6 +885,14 @@ public:
 		return itr;
 	}
 
+	/**
+	* @brief	Return const_iterator to end.
+	*
+	* @author	PearCoding
+	* @date		02.08.2015
+	*
+	* @return	An const_iterator pointing after the last element.
+	*/
 	inline const_iterator cend() const
 	{
 		return end();
@@ -771,6 +904,21 @@ public:
 	 *  Math based set operations.
 	 */
 	///@{
+	
+	/**
+	 * @brief	Returns container only containing elements from start index to end index.
+	 *
+	 * The new data container can contain single sized dimensions. Use trim() when needed. 
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @param	start	The start index.
+	 * @param	end  	The end index.
+	 *
+	 * @return	New data container;
+	 * @see		trim()
+	 */
 	inline Data<value_type> split(const element_size_type& start, const element_size_type& end) const
 	{
 		Q_ASSERT(start.size() == end.size());
@@ -806,6 +954,17 @@ public:
 	 *  Operations working with the index scheme of the data container.
 	 */
 	///@{
+	
+	/**
+	 * @brief	Converts a list of indexes per dimension to a linear index.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @param	indexes	The indexes per dimension.
+	 *
+	 * @return	Linear index.
+	 */
 	inline size_type toLinear(const element_size_type& indexes) const
 	{
 		size_type index = 0;
@@ -816,6 +975,16 @@ public:
 		return index;
 	}
 
+	/**
+	 * @brief	Converts a linear index to a list of indexes per dimension.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 *
+	 * @param	index	Linear index.
+	 *
+	 * @return	The indexes per dimension.
+	 */
 	inline element_size_type toMulti(size_type index) const
 	{
 		element_size_type indexes;
@@ -833,6 +1002,13 @@ public:
 	*  Operations working with the referencing mechanism.
 	*/
 	///@{
+	
+	/**
+	 * @brief	Forces the data container to deattach from other references and allocates his own space.
+	 *
+	 * @author	PearCoding
+	 * @date	02.08.2015
+	 */
 	void makeSingle()
 	{
 		if (mRef->mRefs > 1)

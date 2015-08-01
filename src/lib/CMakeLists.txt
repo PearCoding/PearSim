@@ -64,7 +64,8 @@ SET(PSL_Src
 )
 
 SET(PSL_MAIN_Hdr
-  ${PSL_Root}/config.h.in)
+  ${PSL_Root}/config.h.in
+  ${PSL_Root}/documentation.h)
 SOURCE_GROUP("Header Files" FILES ${PSL_MAIN_Hdr})
 SET(PSL_ACTORS_Hdr
   ${PSL_Root}/actors/emptyactor.h
